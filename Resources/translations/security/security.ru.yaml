@@ -1,0 +1,23 @@
+# Роль
+
+ROLE_MANUFACTURE_PART_APPLICATION:
+  name: 'Производственные заявки'
+  desc: 'Производство продукции - заявки'
+
+# Правила
+
+ROLE_MANUFACTURE_PART_APPLICATION_INDEX:
+  name: 'Просмотр'
+  desc: ''
+
+ROLE_MANUFACTURE_PART_APPLICATION_NEW:
+  name: 'Создать заявку'
+  desc: ''
+
+ROLE_MANUFACTURE_PART_APPLICATION_EDIT:
+  name: 'Редактировать'
+  desc: ''
+
+ROLE_MANUFACTURE_PART_APPLICATION_DELETE:
+  name: 'Удалить'
+  desc: ''
