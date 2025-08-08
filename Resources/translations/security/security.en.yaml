@@ -1,0 +1,23 @@
+# Role
+
+ROLE_MANUFACTURE_PART_APPLICATION:
+  name: 'Production'
+  desc: 'Product production'
+
+# Rules
+
+ROLE_MANUFACTURE_PART_APPLICATION_INDEX:
+  name: 'View'
+  desc: ''
+
+ROLE_MANUFACTURE_PART_APPLICATION_NEW:
+  name: 'Open Party'
+  desc: ''
+
+ROLE_MANUFACTURE_PART_APPLICATION_EDIT:
+  name: 'Edit'
+  desc: ''
+
+ROLE_MANUFACTURE_PART_APPLICATION_DELETE:
+  name: 'Delete'
+  desc: ''
