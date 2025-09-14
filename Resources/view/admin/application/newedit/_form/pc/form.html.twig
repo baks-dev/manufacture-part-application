@@ -79,14 +79,15 @@
                         title="Количество выполненных заказов"
                 >
 
-                {{ form_widget(form.product_data[loop.index - 1].total, {
+                {{ form_widget(form.product_data[loop.index0].total, {
 
                     attr: {
-                        value : form.product_data[loop.index - 1].vars.value.total ?:1,
+                        value : form.product_data[loop.index0].vars.value.total ?:1,
                         class : 'form-control-lg mx-1 rounded-3 total text-center manufacture_part_products_form_total',
                         style: 'width: 85px;',
-                        'data-max' :  form.product_data[loop.index - 1].vars.value.total ?:99,
+                        'data-max' :  form.product_data[loop.index0].vars.value.total ?:99,
                     }
+
                 }) }}
 
             </span>
@@ -101,17 +102,15 @@
 
             {# Вывод скрытых полей - данные для каждого из товаров product_data #}
 
-            {{ form_widget(form.product_data[loop.index-1].product) }}
-            {{ form_widget(form.product_data[loop.index-1].offer) }}
-            {{ form_widget(form.product_data[loop.index-1].variation) }}
-            {{ form_widget(form.product_data[loop.index-1].modification) }}
+            {{ form_widget(form.product_data[loop.index0].product) }}
+            {{ form_widget(form.product_data[loop.index0].offer) }}
+            {{ form_widget(form.product_data[loop.index0].variation) }}
+            {{ form_widget(form.product_data[loop.index0].modification) }}
 
         </div>
 
     {% endfor %}
 {% endif %}
 
-
-{{ form_widget(form.priority) }}
 
 

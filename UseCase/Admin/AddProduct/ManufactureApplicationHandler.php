@@ -55,6 +55,9 @@ final class ManufactureApplicationHandler extends AbstractHandler
 //            transport: 'manufacture-application',
 //        );
 
+        $this->messageDispatch
+            ->addClearCacheOther('manufacture-part-application');
+
         return $this->main;
     }
 }

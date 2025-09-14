@@ -5,9 +5,9 @@
 
 <div id="{{ identifier }}" class="col-2 p-1 ">
 
-    {% set priority_style = item.priority ? 'border-danger' : 'border-primary' %}
+    {% set priority_style = item.priority ? 'border-danger bg-danger' : 'border-primary bg-primary' %}
 
-    <div class="border-bottom border-4 rounded-4 bg-primary priority_style {{ priority_style }} ">
+    <div class="border-bottom border-4 rounded-4 {{ priority_style }} ">
         <div class="card bg-light-primary rounded-4" >
 
             {% set product_image = item.ProductRootImages %}
@@ -19,8 +19,8 @@
 
 
             <div class="card-body p-2">
-                <div class="d-flex align-items-center small" style="justify-content: end;">
-{#                    {{ item.status }}#}
+                {# <div class="d-flex align-items-center small" style="justify-content: end;">
+                #}{#                    {{ item.status }} #}{#
                     {% set output_status =  item.status == 'new' ? 'открыта' : 'завершена' %}
                     {% set output_bg =  item.status == 'new' ? 'bg-primary' : 'bg-secondary' %}
 
@@ -32,7 +32,7 @@
                         <span>{{ item.productTotalCompleted ? '(' ~ item.productTotalCompleted ~ ')' : '' }}</span>
                     </div>
 
-                </div>
+                </div> #}
             </div>
 
             <div class="d-flex flex-column small gap-1 p-2 bg-cover lazy col-2 w-100"
@@ -41,7 +41,7 @@
             >
             </div>
 
-            <div class="card-body d-flex flex-column p-2 small">
+            <div class="card-body d-flex flex-column p-2">
 
                 <span class="fw-bolder mb-1 text-dark text-decoration-none product-name">{{ item.productName }}</span>
 
@@ -64,24 +64,26 @@
                 </div>
 
 
-                <div class="mb-1 mt-2">
+                {# {{ card.productOfferValue|call_twig_func(card.productOfferReference) }} {{ card.productOfferPostfix }} #}
+
+
+                {# <div class="mb-1 mt-2">
                     <span class="opacity-50 fw-normal">Производство:</span> &nbsp;
                     <strong>{{ item.actionName }}</strong>
-                </div>
+                </div> #}
+
                 <div class="mb-1">
-                    <span class="opacity-50 fw-normal">Ответственный:</span> &nbsp;
+                    <span class="opacity-50 small">Ответственный:</span> &nbsp;
                     <strong> {{ item.usersProfileUsername }}</strong>
                 </div>
 
-                <div class="mb-1">
-                    <span class="opacity-50 fw-normal">Количество:</span> &nbsp;
-                    <strong> {{ item.productTotal }}</strong>
-                </div>
 
+                <div class="d-flex justify-content-between align-items-center">
 
-                <div class="d-flex justify-content-between align-items-center small">
-
-{#                    <div class="mb-1">{{ item.productArticle }}</div>#}
+                    <div>
+                        <span class="opacity-50">Количество:</span> &nbsp;
+                        <strong> {{ item.productTotal }}</strong> шт.
+                    </div>
 
                     {% if is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN') %}
 
@@ -92,8 +94,7 @@
                                     data-bs-toggle="tooltip"
                                     data-bs-placement="bottom"
                                     data-bs-delay='{"show":600,"hide":100}'
-{#                        title='{{ item.exist_manufacture ? 'Продукция на производстве' : 'Добавить в партию производства' }}' #}
-                        title='Добавить в партию производства'
+                                    title='Добавить в партию производства'
                             >
 
                         {# Для возможности открытия модвльного окна в script.js через POST добавлены data-атрибуты #}
@@ -128,7 +129,7 @@
                            data-manufacture_application_product_event="{{ item.ManufactureApplicationEvent }}"
 
                            data-collection-form="product_form_data"
-                           data-total="100"
+                           data-total="{{ item.productTotal }}"
 
                            data-post-class="add-one-to-collection"
 

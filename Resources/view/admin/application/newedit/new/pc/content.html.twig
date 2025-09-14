@@ -1,6 +1,6 @@
 {% trans_default_domain 'manufacture-part-application.admin' %}
 
-<div class="modal-dialog modal-dialog-centered " style="max-width: 800px;">
+<div class="modal-dialog modal-dialog-centered " style="max-width: 700px;">
     {{ form_start(form) }}
 
 
@@ -17,9 +17,29 @@
         </div>
 
         <div class="modal-footer ">
+
+
             <div class="flex-grow-1">
-                &nbsp;
+
+                <div class="flex-fill d-flex radio-buttons gap-3" data-buttons="true">
+                    <label class="btn p-3 border-dotted rounded-3 {{ form.priority.vars.data ? 'active' }}"
+                           style="width: 350px;">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+								<span class="h5">
+									<div class="form-check d-flex align-items-center">
+										{{ form_widget(form.priority, { label: false }) }}
+										<span>
+											Высокий приоритет
+										</span>
+									</div>
+								</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
             </div>
+
             <div class="d-flex gap-3">
                 {# Отмена #}
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">
