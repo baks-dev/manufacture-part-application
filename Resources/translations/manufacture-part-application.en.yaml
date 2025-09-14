@@ -1,0 +1,11 @@
+admin:
+  success:
+      new: "new manufacture application was added"
+  application:
+    page:
+      new: "Create manufacture application"
+  page:
+    manufacture-application: "Manufacture applications"
+
+  breadcrumb:
+    index: "Manufacture applications"
