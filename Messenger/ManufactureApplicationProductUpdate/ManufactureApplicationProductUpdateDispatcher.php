@@ -61,6 +61,10 @@ final class ManufactureApplicationProductUpdateDispatcher
                 $message->getModification(),
             );
 
+            if(false === ($ManufactureApplicationProductResult instanceof ManufactureApplicationProductResult))
+            {
+                return;
+            }
 
             /* DTO для обновления заявки */
             $UpdateManufactureApplicationDTO = new UpdateManufactureApplicationDTO();
