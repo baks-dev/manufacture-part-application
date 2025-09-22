@@ -106,11 +106,7 @@ final class ManufactureApplicationProductForm extends AbstractType
             $data = $event->getData();
 
             $limit['min'] = 1;
-
-            if($data?->getTotal())
-            {
-                $limit['max'] = $data->getTotal();
-            }
+            $limit['max'] = 500;
 
             $form = $event->getForm();
             $form->add('total', TextType::class, ['attr' => $limit]);
