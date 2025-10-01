@@ -12,7 +12,7 @@
 
 {# ---- CSS ------------------------------------------------------------ #}
 {% block stylesheets %}
-    <link href="/assets/plugins/nice-select2/nice-select2.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/{{ version }}/plugins/nice-select2/nice-select2.min.css" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {# ---- HEADER-БЛОК ------------------------------------------------------------ #}
@@ -50,9 +50,9 @@
 </script>
 
 
-<script nonce='{{ csp_nonce() }}' async  data-src='/assets/plugins/nice-select2/nice-select2.min.js?v={{ version }}' class='lazy'></script>
-<script nonce='{{ csp_nonce() }}' async data-src="/assets/manufacture-part-application/filter.min.js?v={{ version }}" class="lazy"></script>
-<script nonce='{{ csp_nonce() }}' async data-src='/assets/js/radio.input.min.js?v={{ version }}' class='lazy'></script>
+<script nonce='{{ csp_nonce() }}' async  data-src='/assets/{{ version }}/plugins/nice-select2/nice-select2.min.js?v={{ version }}' class='lazy'></script>
+<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/manufacture-part-application/filter.min.js?v={{ version }}" class="lazy"></script>
+<script nonce='{{ csp_nonce() }}' async data-src='/assets/{{ version }}/js/radio.input.min.js?v={{ version }}' class='lazy'></script>
 
 
 {% endblock %}

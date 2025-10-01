@@ -7,7 +7,7 @@
         <div class="d-flex justify-content-between gap-3 align-items-center w-100 mb-2  {{ loop.last ?: 'border-bottom border-light' }}">
 
             {# Обложка  #}
-            {% set image_path = '/assets/img/blank.svg' %}
+            {% set image_path = '/assets/'~version~'/img/blank.svg' %}
 
             {% if application.productImageExt is defined and application.productImageExt is not null %}
                 {% set image_path = cdn_image_path(application.productImage, application.productImageExt, application.productImageCdn) %}

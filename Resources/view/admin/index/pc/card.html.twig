@@ -12,7 +12,7 @@
 
             {% set product_image = item.ProductRootImages %}
 
-            {% set image_path = '/assets/img/blank.svg' %}
+            {% set image_path = '/assets/'~version~'/img/blank.svg' %}
             {% if product_image.img_ext is defined and product_image.img_ext is not null %}
                 {% set image_path = cdn_image_path(product_image.img, product_image.img_ext, product_image.img_cdn, 'small') %}
             {% endif %}
