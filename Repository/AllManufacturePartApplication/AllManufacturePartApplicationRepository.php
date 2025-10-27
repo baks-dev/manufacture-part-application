@@ -38,6 +38,7 @@ use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\CategoryProductModification;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans\CategoryProductModificationTrans;
 use BaksDev\Products\Category\Entity\Offers\Variation\Trans\CategoryProductVariationTrans;
+use BaksDev\Products\Product\Entity\Info\ProductInfo;
 use BaksDev\Products\Product\Entity\Offers\Image\ProductOfferImage;
 use BaksDev\Products\Product\Entity\Offers\ProductOffer;
 use BaksDev\Products\Product\Entity\Offers\Variation\Image\ProductVariationImage;
@@ -149,6 +150,16 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 ProductTrans::class,
                 'product_trans',
                 'product_trans.event = manufacture_application_product.product AND product_trans.local = :local',
+            );
+
+
+        $dbal
+            ->addSelect('product_info.article AS product_article')
+            ->leftJoin(
+                'manufacture_application_product',
+                ProductInfo::class,
+                'product_info',
+                'product_info.event = manufacture_application_product.product',
             );
 
         /* Торговое предложение */
