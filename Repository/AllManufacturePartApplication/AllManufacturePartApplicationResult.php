@@ -89,10 +89,10 @@ final class AllManufacturePartApplicationResult
         return $this->status;
     }
 
-    //    public function getProductArticle(): ?string
-    //    {
-    //        return $this->product_article;
-    //    }
+    public function getProductArticle(): ?string
+    {
+        return $this->product_article;
+    }
 
     public function getPriority(): ?bool
     {

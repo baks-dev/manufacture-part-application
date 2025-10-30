@@ -152,7 +152,6 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 'product_trans.event = manufacture_application_product.product AND product_trans.local = :local',
             );
 
-
         $dbal
             ->addSelect('product_info.article AS product_article')
             ->leftJoin(
@@ -161,6 +160,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 'product_info',
                 'product_info.event = manufacture_application_product.product',
             );
+
 
         /* Торговое предложение */
 
