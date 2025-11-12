@@ -54,15 +54,42 @@
             </div>
 
             <a href="{{ large_path ?: '#' }}" {{ large_path ? 'target="_blank"' }}
-               class="zoom-in d-flex flex-column small gap-1 p-2 bg-cover lazy col-2 w-100"
-                 style=" height: 200px;"
-                 data-bg="{{ image_path }}"
-            >
+               class="zoom-in small gap-1 p-2 bg-cover lazy col-2 w-100 position-relative"
+               style=" height: 200px;"
+               data-bg="{{ image_path }}">
+
+                <div class="btn-group position-absolute bottom-0 end-0 p-1" role="group">
+
+                    {% if item.ordersAlarm %}
+                        <button type="submit"
+                                class="btn btn-danger btn-sm py-0"
+                                role="tooltip"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                title='Количество срочных заказов'
+                        >
+                            {{ item.ordersAlarm }}
+                        </button>
+                    {% endif %}
+
+                </div>
+
             </a>
 
             <div class="card-body d-flex flex-column p-2">
 
-                <span class="fw-bolder mb-1 text-dark text-decoration-none product-name">{{ item.productName }}</span>
+                {# <span class="fw-bolder mb-1 text-dark text-decoration-none product-name">{{ item.productName }}</span> #}
+
+                <div class="fw-bolder mb-1 text-dark text-decoration-none product-name text-truncate pointer"
+                     style="max-width: 230px"
+                     role="tooltip"
+                     data-bs-toggle="tooltip"
+                     data-bs-placement="top"
+                     data-bs-delay='{"show":600,"hide":100}'
+                     title="{{ item.productName }}"
+                >
+                    {{ item.productName }}
+                </div>
 
 
                 <div class="text-muted fw-bolder mb-1">

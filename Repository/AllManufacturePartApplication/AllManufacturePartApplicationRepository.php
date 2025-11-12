@@ -46,11 +46,13 @@ use BaksDev\Products\Product\Entity\Offers\Variation\Modification\Image\ProductM
 use BaksDev\Products\Product\Entity\Offers\Variation\Modification\ProductModification;
 use BaksDev\Products\Product\Entity\Offers\Variation\ProductVariation;
 use BaksDev\Products\Product\Entity\Photo\ProductPhoto;
+use BaksDev\Products\Product\Entity\ProductInvariable;
 use BaksDev\Products\Product\Entity\Trans\ProductTrans;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
+use BaksDev\Wildberries\Orders\Entity\Alarm\WbOrdersStatisticsAlarm;
 
 /**
  * Получение произв-ных заявок
@@ -199,6 +201,8 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'category_offer_trans',
                     'category_offer_trans.offer = category_offer.id AND category_offer_trans.local = :local'
                 );
+
+
         }
 
         /* Проверить указано ли сво-во variation в процессе производства (action) */
@@ -291,8 +295,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 '
                 product_modification_image.modification = product_modification.id AND
                 product_modification_image.root = true
-			',
-            );
+			');
 
         }
 
@@ -306,12 +309,11 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 '
                 product_variation_image.variation = product_variation.id AND
                 product_variation_image.root = true
-			',
-            );
+			');
         }
 
 
-        /* Задать условия для св-в product_variation_image.name таблицы  в зависимости от того указано ли сво-во variation в процессе производства (action) */
+        /* Задать условия для св-в product_variation_image.name таблицы в зависимости от того указано ли сво-во variation в процессе производства (action) */
         $product_variation_image_cond = $this->has_offer && $this->has_variation ? 'product_variation_image.name IS NULL AND ' : '';
 
         if($this->has_offer)
@@ -325,8 +327,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 $product_variation_image_cond.
                 'product_offer_images.offer = product_offer.id AND
 			product_offer_images.root = true
-			',
-            );
+			');
 
         }
 
@@ -438,6 +439,43 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 'users_profile_personal',
                 'users_profile_personal.event = users_profile.event'
             );
+
+
+        $invariable_condition = '';
+
+        if($this->has_offer)
+        {
+            $invariable_condition .= ' AND product_invariable.offer = product_offer.const';
+        }
+
+        if($this->has_variation)
+        {
+            $invariable_condition .= ' AND product_invariable.variation = product_variation.const';
+        }
+
+        if($this->has_modification)
+        {
+            $invariable_condition .= ' AND product_invariable.modification = product_modification.const';
+        }
+
+
+        $dbal
+            ->leftJoin(
+                'product_info',
+                ProductInvariable::class,
+                'product_invariable',
+                'product_invariable.product = product_info.product'.$invariable_condition,
+            );
+
+        $dbal
+            ->addSelect('SUM(wb_orders_statistics_alarm.value) AS orders_alarm')
+            ->leftJoin(
+                'product_invariable',
+                WbOrdersStatisticsAlarm::class,
+                'wb_orders_statistics_alarm',
+                'wb_orders_statistics_alarm.invariable = product_invariable.id',
+            );
+
 
 
         if($this->search?->getQuery())

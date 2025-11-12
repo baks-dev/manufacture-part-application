@@ -35,13 +35,9 @@ final class AllManufacturePartApplicationResult
     public function __construct(
         private string|null $id,
         private string|null $event,
-
         private string|null $product_uid,
-
         private string|null $action_name,
-
         private string|null $users_profile_username,
-
         private string|null $product_name,
         private string|null $product_article,
 
@@ -76,6 +72,8 @@ final class AllManufacturePartApplicationResult
         private ?string $product_modification_reference = null,
         private ?string $product_modification_name = null,
         private ?string $product_modification_name_postfix = null,
+
+        private ?int $orders_alarm = null,
 
     ) {}
 
@@ -250,6 +248,11 @@ final class AllManufacturePartApplicationResult
     public function getProductTotalCompleted(): ?int
     {
         return $this->product_total_completed;
+    }
+
+    public function getOrdersAlarm(): int|false
+    {
+        return $this->orders_alarm ?: false;
     }
 
 }
