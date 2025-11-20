@@ -32,10 +32,10 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * которое диспатчится при добавлении товара в Производственную партию, если completed true
  */
 #[AsMessageHandler(priority: 10)]
-final class ManufactureApplicationProductCompleteDispatcher
+final readonly class ManufactureApplicationProductCompleteDispatcher
 {
     public function __construct(
-        private readonly ManufactureApplicationCompletedHandler $applicationCompletedHandler,
+        private ManufactureApplicationCompletedHandler $applicationCompletedHandler,
     ) {}
 
     public function __invoke(ManufactureApplicationProductCompleteMessage $message): void

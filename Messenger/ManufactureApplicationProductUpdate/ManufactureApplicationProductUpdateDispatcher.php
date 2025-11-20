@@ -36,12 +36,12 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * которое диспатчится при добавлении товара в Производственную партию
  */
 #[AsMessageHandler(priority: 10)]
-final class ManufactureApplicationProductUpdateDispatcher
+final readonly class ManufactureApplicationProductUpdateDispatcher
 {
 
     public function __construct(
         private ManufactureApplicationProductInterface $manufactureApplicationProduct,
-        private readonly UpdateManufactureApplicationProductHandler $UpdateManufactureApplicationProductHandler,
+        private UpdateManufactureApplicationProductHandler $UpdateManufactureApplicationProductHandler,
     ) {}
 
     public function __invoke(ManufacturePartProductMessage $message): void
