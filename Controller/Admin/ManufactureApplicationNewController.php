@@ -42,7 +42,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[RoleSecurity('ROLE_MANUFACTURE_PART_APPLICATION_NEW')]
 final class ManufactureApplicationNewController extends AbstractController
 {
-
     #[Route('/admin/manufacture/part/application/new', name: 'admin.application.newedit.new', methods: ['GET', 'POST'])]
     public function news(
         Request $request,
@@ -57,7 +56,7 @@ final class ManufactureApplicationNewController extends AbstractController
         $form = $this->createForm(
             type: ManufactureApplicationCollectionForm::class,
             data: $ManufactureApplicationDTOCollection,
-            options: ['action' => $this->generateUrl('manufacture-part-application:admin.application.newedit.new')]
+            options: ['action' => $this->generateUrl('manufacture-part-application:admin.application.newedit.new')],
         )
             ->handleRequest($request);
 
@@ -68,9 +67,9 @@ final class ManufactureApplicationNewController extends AbstractController
 
             foreach($ManufactureApplicationDTOCollection->getProductData() as $key => $ManufactureApplicationProductDTO)
             {
-                $ManufactureApplicationDTO = new ManufactureApplicationDTO($this->getProfileUid());
-                $ManufactureApplicationDTO->setPriority($ManufactureApplicationDTOCollection->getPriority());
-                $ManufactureApplicationDTO->setProduct($ManufactureApplicationProductDTO);
+                $ManufactureApplicationDTO = new ManufactureApplicationDTO($this->getCurrentProfileUid())
+                    ->setPriority($ManufactureApplicationDTOCollection->getPriority())
+                    ->setProduct($ManufactureApplicationProductDTO);
 
                 $handle = $ManufactureApplicationHandler->handle($ManufactureApplicationDTO);
 

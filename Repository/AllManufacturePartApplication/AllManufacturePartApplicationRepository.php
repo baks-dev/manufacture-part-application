@@ -51,6 +51,7 @@ use BaksDev\Products\Product\Entity\Trans\ProductTrans;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Wildberries\Orders\Entity\Alarm\WbOrdersStatisticsAlarm;
 
@@ -154,14 +155,31 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 'product_trans.event = manufacture_application_product.product AND product_trans.local = :local',
             );
 
+
+        //        $dbal
+        //            ->addSelect('product_info.article AS product_article')
+        //            ->join(
+        //                'manufacture_application_product',
+        //                ProductInfo::class,
+        //                'product_info',
+        //                'product_info.event = manufacture_application_product.product',
+        //            );
+
+
         $dbal
             ->addSelect('product_info.article AS product_article')
-            ->leftJoin(
+            ->join(
                 'manufacture_application_product',
                 ProductInfo::class,
                 'product_info',
-                'product_info.event = manufacture_application_product.product',
+                'product_info.event = manufacture_application_product.product AND (product_info.profile IS NULL OR product_info.profile = :profile)',
+            )
+            ->setParameter(
+                key: 'profile',
+                value: $this->UserProfileTokenStorage->getProfile(),
+                type: UserProfileUid::TYPE,
             );
+
 
 
         /* Торговое предложение */
@@ -482,11 +500,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
         {
             $dbal
                 ->createSearchQueryBuilder($this->search, true)
-                ->addSearchEqualUid('manufacture_application.id')
-                ->addSearchEqualUid('manufacture_application.event')
-                ->addSearchEqualUid('manufacture_application_product.id')
-                ->addSearchEqualUid('product_variation.id')
-                ->addSearchEqualUid('product_modification.id')
+                ->addSearchLike('product_info.article')
                 ->addSearchLike('product_trans.name');
 
         }
