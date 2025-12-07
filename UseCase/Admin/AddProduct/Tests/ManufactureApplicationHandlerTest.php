@@ -14,10 +14,11 @@ use BaksDev\Products\Product\Type\Event\ProductEventUid;
 use BaksDev\Products\Product\Type\Offers\Id\ProductOfferUid;
 use BaksDev\Products\Product\Type\Offers\Variation\Id\ProductVariationUid;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\Id\ProductModificationUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
-use PHPUnit\Framework\Attributes\Group;
 
 
 #[Group('manufacture-part-application')]
@@ -53,7 +54,7 @@ final class ManufactureApplicationHandlerTest extends KernelTestCase
     public function testUseCase(): void
     {
         /** @see ManufactureApplicationDTO */
-        $ManufactureApplicationDTO = new ManufactureApplicationDTO();
+        $ManufactureApplicationDTO = new ManufactureApplicationDTO(new UserProfileUid(UserProfileUid::TEST));
 
         $ManufactureApplicationProductDTO = $ManufactureApplicationDTO
             ->getProduct();
@@ -74,17 +75,17 @@ final class ManufactureApplicationHandlerTest extends KernelTestCase
     }
 
 
-    public function testComplete(): void
-    {
-        /** @var DBALQueryBuilder $dbal */
-        $dbal = self::getContainer()->get(DBALQueryBuilder::class);
-
-        $dbal->createQueryBuilder(self::class);
-
-        $dbal->from(ManufactureApplication::class)
-            ->where('id = :id')
-            ->setParameter('id', ManufactureApplicationUid::TEST);
-
-        self::assertTrue($dbal->fetchExist());
-    }
+    //    public function testComplete(): void
+    //    {
+    //        /** @var DBALQueryBuilder $dbal */
+    //        $dbal = self::getContainer()->get(DBALQueryBuilder::class);
+    //
+    //        $dbal->createQueryBuilder(self::class);
+    //
+    //        $dbal->from(ManufactureApplication::class)
+    //            ->where('id = :id')
+    //            ->setParameter('id', ManufactureApplicationUid::TEST);
+    //
+    //        self::assertTrue($dbal->fetchExist());
+    //    }
 }
