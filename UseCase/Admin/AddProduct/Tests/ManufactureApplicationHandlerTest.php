@@ -75,17 +75,17 @@ final class ManufactureApplicationHandlerTest extends KernelTestCase
     }
 
 
-    //    public function testComplete(): void
-    //    {
-    //        /** @var DBALQueryBuilder $dbal */
-    //        $dbal = self::getContainer()->get(DBALQueryBuilder::class);
-    //
-    //        $dbal->createQueryBuilder(self::class);
-    //
-    //        $dbal->from(ManufactureApplication::class)
-    //            ->where('id = :id')
-    //            ->setParameter('id', ManufactureApplicationUid::TEST);
-    //
-    //        self::assertTrue($dbal->fetchExist());
-    //    }
+    public function testComplete(): void
+    {
+        /** @var DBALQueryBuilder $dbal */
+        $dbal = self::getContainer()->get(DBALQueryBuilder::class);
+
+        $dbal->createQueryBuilder(self::class);
+
+        $dbal->from(ManufactureApplication::class)
+            ->where('id = :id')
+            ->setParameter('id', ManufactureApplicationUid::TEST);
+
+        self::assertTrue($dbal->fetchExist());
+    }
 }

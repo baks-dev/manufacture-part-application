@@ -33,7 +33,10 @@ final class ManufactureApplicationStatusTest
             self::assertTrue($ManufactureApplicationStatus->equals($ManufactureApplicationStatus)); // объект класса
 
             $ManufactureApplicationStatusType = new ManufactureApplicationStatusType();
-            $platform = $this->getMockForAbstractClass(AbstractPlatform::class);
+            $platform = $this
+                ->getMockBuilder(AbstractPlatform::class)
+                ->getMock();
+
 
             $convertToDatabase = $ManufactureApplicationStatusType->convertToDatabaseValue($ManufactureApplicationStatus, $platform);
             self::assertEquals($ManufactureApplicationStatus->getManufactureApplicationStatusValue(), $convertToDatabase);

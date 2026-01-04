@@ -24,7 +24,10 @@
 namespace BaksDev\Manufacture\Part\Application\Repository\AllManufacturePartApplication\Tests;
 
 use BaksDev\Manufacture\Part\Application\Repository\AllManufacturePartApplication\AllManufacturePartApplicationInterface;
+use BaksDev\Manufacture\Part\Application\Repository\AllManufacturePartApplication\AllManufacturePartApplicationResult;
 use PHPUnit\Framework\Attributes\Group;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -32,15 +35,33 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class AllManufacturePartApplicationRepositoryTest extends KernelTestCase
 {
-    public function testfindAll(): void {
+    public function testfindAll(): void
+    {
+        self::assertTrue(true);
+
         /** @var AllManufacturePartApplicationInterface $repository */
         $repository = self::getContainer()->get(AllManufacturePartApplicationInterface::class);
 
         //        $result = $repository->findAll();
-        $result = $repository->findPaginator();
+        $paginator = $repository->findPaginator();
+        $data = $paginator->getData();
 
-        //        dd(iterator_to_array($result));
+        foreach($data as $AllManufacturePartApplicationResult)
+        {
+            // Вызываем все геттеры
+            $reflectionClass = new ReflectionClass(AllManufacturePartApplicationResult::class);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
 
-        self::assertTrue(true);
+            foreach($methods as $method)
+            {
+                // Методы без аргументов
+                if($method->getNumberOfParameters() === 0)
+                {
+                    // Вызываем метод
+                    $data = $method->invoke($AllManufacturePartApplicationResult);
+                    // dump($data);
+                }
+            }
+        }
     }
 }

@@ -24,19 +24,19 @@
 namespace BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicationProduct\Tests;
 
 use BaksDev\Manufacture\Part\Application\Entity\ManufactureApplication;
-use BaksDev\Manufacture\Part\Application\Type\Event\ManufactureApplicationEventUid;
+use BaksDev\Manufacture\Part\Application\Type\Id\ManufactureApplicationUid;
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\AddProduct\Tests\ManufactureApplicationHandlerTest;
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicationProduct\UpdateManufactureApplicationDTO;
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicationProduct\UpdateManufactureApplicationProductHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Attribute\When;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\DependsOnClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 
@@ -54,20 +54,22 @@ final class UpdateManufactureApplicationProductHandlerTest extends KernelTestCas
 
 
         /** @var EntityManagerInterface $em */
-        //        $em = self::getContainer()->get(EntityManagerInterface::class);
-        //
-        //        $ManufactureApplicationEvent = $em->getRepository(ManufactureApplicationEvent::class)
-        //            ->find(ManufactureApplicationEventUid::TEST);
+        $em = self::getContainer()->get(EntityManagerInterface::class);
 
+
+        $ManufactureApplication = $em->getRepository(ManufactureApplication::class)
+            ->find(ManufactureApplicationUid::TEST);
+
+        self::assertInstanceOf(ManufactureApplication::class, $ManufactureApplication);
 
         /** @see $UpdateManufactureApplicationDTO */
         $UpdateManufactureApplicationDTO = new UpdateManufactureApplicationDTO();
+        $UpdateManufactureApplicationDTO->setId($ManufactureApplication->getEvent());
+
         $UpdateManufactureApplicationProductDTO = $UpdateManufactureApplicationDTO->getProduct();
-
         $UpdateManufactureApplicationProductDTO->setTotal(20);
-        $UpdateManufactureApplicationDTO->setId(new ManufactureApplicationEventUid(ManufactureApplicationEventUid::TEST));
 
-
+        /** @var UpdateManufactureApplicationProductHandler $ManufactureApplicationUpdateHandler */
         $ManufactureApplicationUpdateHandler = self::getContainer()->get(UpdateManufactureApplicationProductHandler::class);
         $handle = $ManufactureApplicationUpdateHandler->handle($UpdateManufactureApplicationDTO);
 
