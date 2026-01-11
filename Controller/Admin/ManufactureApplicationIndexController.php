@@ -35,6 +35,8 @@ use BaksDev\Manufacture\Part\Application\Forms\ManufactureApplicationFilter\Admi
 use BaksDev\Manufacture\Part\Application\Repository\AllManufacturePartApplication\AllManufacturePartApplicationInterface;
 use BaksDev\Manufacture\Part\Repository\OpenManufacturePart\OpenManufacturePartInterface;
 use BaksDev\Manufacture\Part\UseCase\Admin\AddProduct\ManufactureSelectionPartProductsForm;
+use BaksDev\Telegram\Bot\BaksDevTelegramBotBundle;
+use BaksDev\Telegram\Bot\UseCase\TelegramProductInfo\TelegramProductsInfoForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -86,6 +88,9 @@ final class ManufactureApplicationIndexController extends AbstractController
             ->filter($filter)
             ->findPaginator();
 
+        /** Проверить установлен ли telegram-bot */
+        $has_telegram_bot = class_exists(BaksDevTelegramBotBundle::class);
+
         return $this->render(
             [
                 'query' => $query, //$ManufacturePart,
@@ -95,6 +100,9 @@ final class ManufactureApplicationIndexController extends AbstractController
                 'token' => $tokenUserGenerator->generate($this->getUsr()),
                 'add_selected_product_form_name' => $this->createForm(type: ManufactureSelectionPartProductsForm::class)->getName(),
                 'opens' => $opens,
+                'has_telegram_bot' => class_exists(BaksDevTelegramBotBundle::class),
+                // Если telegram-bot установлен - указать имя формы TelegramProductsInfoForm
+                'telegram_products_info_form_name' => $has_telegram_bot ? $this->createForm(type: TelegramProductsInfoForm::class)->getName() : '',
             ]
         );
     }

@@ -67,6 +67,59 @@
 
         </div>
 
+
+        {# Множественный выбор #}
+        {% if query.data %}
+
+            <div class="position-absolute mt-2 pt-2 small">
+                <strong class="">Множественный выбор:</strong>
+            </div>
+
+            <div class="to-production-actions d-flex gap-2 sticky-bottom ps-5 pb-3 pt-2" style="margin-left: 130px;">
+
+                <button
+                        class="btn btn-sm btn-outline-primary text-nowrap mb-2"
+                        role="tooltip"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-delay='{"show":600,"hide":100}'
+                        title="Выбрать все"
+                        id="select-all-to-telegram"
+                        style="min-height: 38px;"
+                >
+                    Выбрать все
+                </button>
+
+
+                {% if has_telegram_bot %}
+                    <a
+                            class="btn btn-sm btn-primary opacity-75 text-nowrap mb-2 d-none"
+                            role="tooltip"
+                            data-bs-placement="bottom"
+                            data-bs-delay='{"show":600,"hide":100}'
+                            title="Отправить выбранные в Telegram"
+                            id="add-all-to-telegram"
+
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal"
+
+                            data-post-class="add-all-to-telegram"
+
+                            data-method="post"
+                            data-collection-form="collection"
+
+                            data-formname="{{ telegram_products_info_form_name }}"
+
+                            href="{{ path('telegram-bot:admin.message.telegram') }}"
+
+                    >
+                        Отправить выбранные в Telegram <img class="shadow rounded-5" src="/assets/telegram-bot/img/telegram.svg" alt="telegram">
+                    </a>
+                {% endif %}
+
+            </div>
+        {% endif %}
+
         {% include Template('_includes/'~baks_settings.device~'/pagination.html.twig') with { 'pagination' : query } %}
 
     </section>
