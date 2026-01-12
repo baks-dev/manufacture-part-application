@@ -55,4 +55,76 @@
 <script nonce='{{ csp_nonce() }}' async data-src='/assets/{{ version }}/js/radio.input.min.js?v={{ version }}' class='lazy'></script>
 <script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/js/copy.min.js?v={{ version }}" class="lazy"></script>
 
+
+<script nonce="{{ csp_nonce() }}">
+/** Обработчики кнопок выбора товаров */
+
+var select_all_to_telegram = document.querySelector("#select-all-to-telegram");
+
+var add_all_to_telegram = document.querySelector("#add-all-to-telegram");
+
+/** Выбор из списка */
+select_all_to_telegram?.addEventListener("click", function() {
+
+    // Выбрать все
+    select_all_to_telegram.classList.toggle("selected");
+
+    if(select_all_to_telegram.classList.contains("selected"))
+        {
+            select_all_to_telegram.innerText = "Снять выбор";
+            select_all_to_telegram.classList.remove("btn-outline-primary");
+            select_all_to_telegram.classList.add("btn-primary");
+        }
+    else
+
+       {
+           select_all_to_telegram.innerText = "Выбрать все";
+           select_all_to_telegram.classList.add("btn-outline-primary");
+           select_all_to_telegram.classList.remove("btn-primary");
+       }
+
+
+    const products = document.querySelectorAll(".add-all-to-telegram");
+
+    // Выбрать все НЕ disabled (т.е. те, которые не на производстве)
+    //products.forEach(checkbox => {if (!checkbox.disabled) { checkbox.checked = select_all_to_telegram.classList.contains("selected");} } );
+    products.forEach(checkbox => {checkbox.checked = select_all_to_telegram.classList.contains("selected"); } );
+
+    const checkboxes = document.querySelectorAll(".add-all-to-telegram");
+    const atLeastOneChecked = Array.from(checkboxes).some(cb => cb.checked);
+
+    if (atLeastOneChecked) {
+        add_all_to_telegram?.classList.remove("d-none");
+    }
+    else {
+        add_all_to_telegram?.classList.add("d-none");
+    }
+
+});
+
+var checkboxs_all_to_telegram = document.querySelectorAll(".add-all-to-telegram");
+
+/** Скрыть или показать кнопку "Добавить выбранные" */
+for (checkbox_all_to_telegram of checkboxs_all_to_telegram) {
+
+    checkbox_all_to_telegram?.addEventListener("click", function() {
+
+        const checkboxes = document.querySelectorAll(".add-all-to-telegram");
+        const atLeastOneChecked = Array.from(checkboxes).some(cb => cb.checked);
+
+        if (atLeastOneChecked) {
+           add_all_to_telegram?.classList.remove("d-none");
+        }
+        else {
+            add_all_to_telegram?.classList.add("d-none");
+            select_all_to_telegram.innerText = "Выбрать все";
+            select_all_to_telegram.classList.toggle("selected");
+        }
+
+    });
+}
+
+</script>
+
+
 {% endblock %}

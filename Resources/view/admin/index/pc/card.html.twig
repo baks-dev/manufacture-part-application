@@ -22,6 +22,36 @@
 
 
             <div class="card-body p-2 d-flex justify-content-between">
+
+
+                {# Чекбокс для множественного добавления товаров в Telegram #}
+                <div class="h5">
+
+                    <input
+                            id="check-{{ identifier }}"
+                            type="checkbox"
+                            class="form-check-input add-all-to-telegram btn-outline-danger"
+
+                            {# Данные, отправляемые POST #}
+                            data-formname="{{ telegram_products_info_form_name }}"
+                            data-product="{{ item.productId }}"
+
+                            {% if opens.actionsOfferOffer %}
+                                data-offer="{{ item.productOfferId }}"
+                            {% endif %}
+                            {% if opens.actionsOfferVariation %}
+                                data-variation="{{ item.productVariationId }}"
+                            {% endif %}
+                            {% if opens.actionsOfferModification %}
+                                data-modification="{{ item.productModificationId }}"
+                            {% endif %}
+                            data-total="100"
+
+                            title="Выбрать данный товар"
+
+                    >
+                </div>
+
                 {# <div class="d-flex align-items-center small" style="justify-content: end;">
                 #}{#                    {{ item.status }} #}{#
                 {% set output_status =  item.status == 'new' ? 'открыта' : 'завершена' %}
@@ -125,12 +155,16 @@
                 </div>
 
 
+                {# Кол-во #}
                 <div class="d-flex justify-content-between align-items-center">
-
                     <div>
                         <span class="opacity-50 small">Количество:</span> &nbsp;
                         <strong>{{ item.productTotal }}</strong> шт.
                     </div>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center">
+
 
                     {% if is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN') %}
 
@@ -191,6 +225,52 @@
                     </span>
 
                         {% endif %}
+
+
+                        {# Telegram button #}
+                        {% if has_telegram_bot and opens %}
+
+                            <span
+                                    role="tooltip"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    data-bs-delay='{"show":600,"hide":100}'
+                                    title="Сообщение о товаре в Telegram"
+                                    class="ms-2"
+                            >
+                            <a href="{{ path('telegram-bot:admin.message.telegram') }}"
+                               class="btn-sm btn-primary modal-link rounded-1 disabled"
+
+                               data-bs-toggle="modal"
+                               data-bs-target="#modal"
+
+                               data-method="post"
+                               data-formname="{{ telegram_products_info_form_name }}"
+
+                               data-product="{{ item.productId }}"
+
+                               {% if opens.actionsOfferOffer %}
+                                   data-offer="{{ item.productOfferId }}"
+                               {% endif %}
+                                    {% if opens.actionsOfferVariation %}
+                                        data-variation="{{ item.productVariationId }}"
+                                    {% endif %}
+                                    {# TODO #}
+                                    {% if opens.actionsOfferModification %}
+                                        data-modification="{{ item.productModificationId }}"
+                                    {% endif %}
+
+                               data-collection-form="collection" {# name коллекции из DTO #}
+                               data-post-class="add-one-to-collection" {# признак одного элемента #}
+                            >
+                                <img class="shadow rounded-5" src="/assets/telegram-bot/img/telegram.svg"
+                                     alt="telegram">
+                            </a>
+                        </span>
+                        {% endif %}
+                        {# END Telegram button #}
+
+
                     {% endif %}
                 </div>
 
