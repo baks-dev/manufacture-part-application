@@ -1,9 +1,8 @@
 {# @var item \BaksDev\Manufacture\Part\Application\Repository\AllManufacturePartApplication\AllManufacturePartApplicationResult #}
-{% set identifier = item.id %}
 
 {# @var opens \BaksDev\Manufacture\Part\Repository\OpenManufacturePart\OpenManufacturePartResult #}
 
-<div id="{{ identifier }}" class="col-2 p-1 ">
+<div id="{{ item.identifier }}" class="col-2 p-1 ">
 
     {% set priority_style = item.priority ? 'border-danger bg-danger' : 'border-primary bg-primary' %}
 
@@ -28,7 +27,7 @@
                 <div class="h5">
 
                     <input
-                            id="check-{{ identifier }}"
+                            id="check-{{ item.identifier }}"
                             type="checkbox"
                             class="form-check-input add-all-to-telegram btn-outline-danger"
 
@@ -149,38 +148,46 @@
                 </div> #}
 
 
-                <div class="mb-1">
-                    <span class="opacity-50 small">Ответственный:</span> &nbsp;
-                    <strong> {{ item.usersProfileUsername }}</strong>
+                <div class="mb-1 text-truncate pointer"
+                     role="tooltip"
+                     data-password-meter-generator="true"
+                     data-bs-toggle="tooltip"
+                     data-bs-placement="right"
+                     data-bs-delay='{"show":600,"hide":100}'
+                     title="{{ item.usersProfileUsername }}"
+                >
+                    <span class="opacity-50 small">Сотрудник:</span> &nbsp;
+                    <strong class="small"> {{ item.usersProfileUsername }}</strong>
                 </div>
 
 
                 {# Кол-во #}
                 <div class="d-flex justify-content-between align-items-center">
+
                     <div>
-                        <span class="opacity-50 small">Количество:</span> &nbsp;
-                        <strong>{{ item.productTotal }}</strong> шт.
+                        <strong class="h6">
+                            {{ item.productTotal }}
+                        </strong> шт.
                     </div>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
 
 
-                    {% if is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN') %}
+                    <div class="d-flex justify-content-end align-items-center">
 
-                        {% if opens and item.status == 'new' %}
+                        {% if is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN') %}
 
-                            <span
-                                    role="tooltip"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="bottom"
-                                    data-bs-delay='{"show":600,"hide":100}'
-                                    title='Добавить в партию производства'
-                            >
+                            {% if opens and item.status == 'new' %}
+
+                                <span
+                                        role="tooltip"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom"
+                                        data-bs-delay='{"show":600,"hide":100}'
+                                        title='Добавить в партию производства'
+                                >
 
                         {# Для возможности открытия модвльного окна в script.js через POST добавлены data-атрибуты #}
-                                {# data-formname - для хранения отправляемых данных  #}
-                                {# data-method - опредеяем метод METHOD для указания в request.open  #}
+                                    {# data-formname - для хранения отправляемых данных  #}
+                                    {# data-method - опредеяем метод METHOD для указания в request.open  #}
                         <a href="{{ path('manufacture-part:admin.selected-products.add') }}"
 
 {#                           class="btn btn-sm {{ item.exist_manufacture ? 'btn-secondary' : 'btn-primary' }} modal-link disabled" #}
@@ -200,9 +207,11 @@
                                 {% if opens.actionsOfferOffer %}
                                     data-offer="{{ item.productOfferId }}"
                                 {% endif %}
+
                                 {% if opens.actionsOfferVariation %}
                                     data-variation="{{ item.productVariationId }}"
                                 {% endif %}
+
                                 {% if opens.actionsOfferModification %}
                                     data-modification="{{ item.productModificationId }}"
                                 {% endif %}
@@ -224,20 +233,20 @@
 
                     </span>
 
-                        {% endif %}
+                            {% endif %}
 
 
-                        {# Telegram button #}
-                        {% if has_telegram_bot and opens %}
+                            {# Telegram button #}
+                            {% if has_telegram_bot and opens %}
 
-                            <span
-                                    role="tooltip"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="bottom"
-                                    data-bs-delay='{"show":600,"hide":100}'
-                                    title="Сообщение о товаре в Telegram"
-                                    class="ms-2"
-                            >
+                                <span
+                                        role="tooltip"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom"
+                                        data-bs-delay='{"show":600,"hide":100}'
+                                        title="Сообщение о товаре в Telegram"
+                                        class="ms-2"
+                                >
                             <a href="{{ path('manufacture-part-application:admin.message.telegram') }}"
                                class="btn-sm btn-primary modal-link rounded-1 disabled"
 
@@ -263,15 +272,23 @@
                                data-collection-form="collection" {# name коллекции из DTO #}
                                data-post-class="add-one-to-collection" {# признак одного элемента #}
                             >
-                                <img class="shadow rounded-5" src="/assets/telegram-bot/img/telegram.svg"
-                                     alt="telegram">
+                                {# <img class="shadow rounded-5" src="/assets/telegram-bot/img/telegram.svg"
+                                     alt="telegram"> #}
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                     class="bi bi-telegram text-secondary" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.287 5.906q-1.168.486-4.666 2.01-.567.225-.595.442c-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294q.39.01.868-.32 3.269-2.206 3.374-2.23c.05-.012.12-.026.166.016s.042.12.037.141c-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8 8 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629q.14.092.27.187c.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.4 1.4 0 0 0-.013-.315.34.34 0 0 0-.114-.217.53.53 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09"/>
+                                </svg>
+
                             </a>
                         </span>
+                            {% endif %}
+                            {# END Telegram button #}
+
+
                         {% endif %}
-                        {# END Telegram button #}
+                    </div>
 
-
-                    {% endif %}
                 </div>
 
 

@@ -29,7 +29,7 @@
 
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
 {% block content %}
-{#    {{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}#}
+    {#    {{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }} #}
     {{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}
 
 {% endblock %}
@@ -49,14 +49,67 @@
  window.centrifugo_token = "{{ token }}";
 </script>
 
-
+<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/centrifugo/centrifuge.min.js?v={{ version }}" class='lazy'></script>
+<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/centrifugo/socket.min.js?v={{ version }}" class='lazy'></script>
 <script nonce='{{ csp_nonce() }}' async  data-src='/assets/{{ version }}/plugins/nice-select2/nice-select2.min.js?v={{ version }}' class='lazy'></script>
 <script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/manufacture-part-application/filter.min.js?v={{ version }}" class="lazy"></script>
 <script nonce='{{ csp_nonce() }}' async data-src='/assets/{{ version }}/js/radio.input.min.js?v={{ version }}' class='lazy'></script>
 <script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/js/copy.min.js?v={{ version }}" class="lazy"></script>
 
-
 <script nonce="{{ csp_nonce() }}">
+
+/** Сокеты */
+
+let CjPJFKQCe = 100;
+
+setTimeout(function wpAAvuMMC()
+{
+    if(typeof centrifuge !== "object")
+    {
+        if(CjPJFKQCe > 1000) { return; }
+
+        CjPJFKQCe = CjPJFKQCe * 2;
+
+        return setTimeout(wpAAvuMMC, CjPJFKQCe);
+    }
+
+    {% if opens %}
+
+          centrifuge.newSubscription('{{ opens.manufacturePartEvent }}').on("publication", function (ctx) {
+                document.getElementById('product-{{ opens.manufacturePartEvent }}').innerHTML = ctx.data.product;
+
+                let $total = parseInt(document.getElementById('total-{{ opens.manufacturePartEvent }}').textContent);
+                document.getElementById('total-{{ opens.manufacturePartEvent }}').textContent = $total + ctx.data.total;
+
+        }).subscribe();
+
+    {% endif %}
+
+    /** Удаляем из списка у всех продукт */
+    centrifuge.newSubscription("remove").on("publication", function (ctx)
+    {
+        if(ctx.data.profile === '{{ current_profile }}')
+        {
+            return;
+        }
+
+        let $identifier = document.getElementById(ctx.data.identifier);
+
+        if($identifier)
+        {
+            $identifier.remove();
+        }
+
+    }).subscribe();
+
+}, 100);
+
+
+
+
+
+
+
 /** Обработчики кнопок выбора товаров */
 
 var select_all_to_telegram = document.querySelector("#select-all-to-telegram");

@@ -230,6 +230,29 @@ final class AllManufacturePartApplicationResult
     }
 
 
+    public function getIdentifier(): string
+    {
+        $identifier = $this->product_uid;
+
+        if($this->product_offer_uid)
+        {
+            $identifier = $this->product_offer_uid;
+        }
+
+        if($this->product_variation_uid)
+        {
+            $identifier = $this->product_variation_uid;
+        }
+
+        if($this->product_modification_uid)
+        {
+            $identifier = $this->product_modification_uid;
+        }
+
+        return $identifier;
+    }
+
+
     public function getProductRootImages(): array|null
     {
         return [
@@ -254,5 +277,6 @@ final class AllManufacturePartApplicationResult
     {
         return $this->orders_alarm ?: false;
     }
+
 
 }
