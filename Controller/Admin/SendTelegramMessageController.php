@@ -33,7 +33,7 @@ use BaksDev\Products\Product\Repository\ProductsDetailByUids\ProductsDetailByUid
 use BaksDev\Products\Product\Repository\ProductsDetailByUids\ProductsDetailByUidsResult;
 use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Api\TelegramSendPhoto;
-use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
+use BaksDev\Telegram\Bot\Repository\TelegramBotSettings\TelegramBotSettingsInterface;
 use BaksDev\Telegram\Bot\UseCase\TelegramProductInfo\TelegramProduct\TelegramProductDTO;
 use BaksDev\Telegram\Bot\UseCase\TelegramProductInfo\TelegramProductsInfoDTO;
 use BaksDev\Telegram\Bot\UseCase\TelegramProductInfo\TelegramProductsInfoForm;
@@ -55,15 +55,19 @@ final class SendTelegramMessageController extends AbstractController
         Request $request,
         TelegramSendMessages $telegramSendMessages,
         TelegramSendPhoto $telegramSendPhoto,
-        TelegramBotSettingsInterface $UsersTableTelegramSettingsRepository,
+        TelegramBotSettingsInterface $TelegramBotSettingsRepository,
         ProductsDetailByUidsInterface $productsDetailByUids,
         ImagePathExtension $ImagePathExtension,
     ): Response
     {
 
         /** Из настроек telegram-bot получить Сообщения */
-        $settings = $UsersTableTelegramSettingsRepository->settings();
-        $messages = $settings->getMessages();
+        $settings = $TelegramBotSettingsRepository
+            ->setProfile($this->getProfileUid())
+            ->settings();
+
+
+        $messages = $settings !== false && $settings->getMessages() !== false ? $settings->getMessages() : [];
 
 
         $TelegramProductsInfoDTO = new TelegramProductsInfoDTO();
