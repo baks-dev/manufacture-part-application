@@ -106,15 +106,12 @@ setTimeout(function wpAAvuMMC()
 
 
 
-
-
-
-
 /** Обработчики кнопок выбора товаров */
 
 var select_all_to_telegram = document.querySelector("#select-all-to-telegram");
 
 var add_all_to_telegram = document.querySelector("#add-all-to-telegram");
+var add_all_to_production = document.querySelector("#add-all-to-production");
 
 /** Выбор из списка */
 select_all_to_telegram?.addEventListener("click", function() {
@@ -148,9 +145,11 @@ select_all_to_telegram?.addEventListener("click", function() {
 
     if (atLeastOneChecked) {
         add_all_to_telegram?.classList.remove("d-none");
+        add_all_to_production?.classList.remove("d-none");
     }
     else {
         add_all_to_telegram?.classList.add("d-none");
+        add_all_to_production?.classList.add("d-none");
     }
 
 });
@@ -167,9 +166,11 @@ for (checkbox_all_to_telegram of checkboxs_all_to_telegram) {
 
         if (atLeastOneChecked) {
            add_all_to_telegram?.classList.remove("d-none");
+           add_all_to_production?.classList.remove("d-none");
         }
         else {
             add_all_to_telegram?.classList.add("d-none");
+            add_all_to_production?.classList.add("d-none");
             select_all_to_telegram.innerText = "Выбрать все";
             select_all_to_telegram.classList.toggle("selected");
         }
