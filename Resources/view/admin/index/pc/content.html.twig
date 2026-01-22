@@ -1,4 +1,3 @@
-
 {% trans_default_domain('manufacture-part-application') %}
 
 <main class="main d-print-none">
@@ -20,31 +19,31 @@
             </div>
         </div>
 
-            {% if opens %}
+        {% if opens %}
 
             {# Партия производства #}
             {{ include(_self|replace({ "content.html.twig": "part.html.twig" }), { card : opens }) }}
 
-            {% else %}
+        {% else %}
 
-                <div class="alert alert-secondary d-flex justify-content-between align-items-center" role="alert">
+            <div class="alert alert-secondary d-flex justify-content-between align-items-center" role="alert">
                 <span>
                     У Вас нет открытых производственных партий
                 </span>
 
-                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANUFACTURE_PART_NEW') %}
-                        <a href="{{ path('manufacture-part:admin.newedit.new') }}"
-                           class="btn modal-btn modal-link disabled btn-primary text-nowrap" data-bs-toggle="modal"
-                           data-bs-target="#modal"
-                           title="Открыть производственную партию">
-                            Открыть новую партию
-                        </a>
-                    {% endif %}
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANUFACTURE_PART_NEW') %}
+                    <a href="{{ path('manufacture-part:admin.newedit.new') }}"
+                       class="btn modal-btn modal-link disabled btn-primary text-nowrap" data-bs-toggle="modal"
+                       data-bs-target="#modal"
+                       title="Открыть производственную партию">
+                        Открыть новую партию
+                    </a>
+                {% endif %}
 
 
-                </div>
+            </div>
 
-            {% endif %}
+        {% endif %}
 
 
         <div class="border border-light rounded-4 p-3">
@@ -91,6 +90,35 @@
                 </button>
 
 
+                {% if opens %}
+                    {# Дoбавить выбранные в заявку #}
+                    <a
+                            class="btn btn-sm btn-danger opacity-75 text-nowrap mb-2 d-none"
+                            role="tooltip"
+                            data-bs-placement="bottom"
+                            data-bs-delay='{"show":600,"hide":100}'
+                            title="Отправить выбранные в партию производства"
+                            id="add-all-to-production"
+
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal"
+
+                            data-post-class="add-all-to-production"
+
+                            data-method="post"
+                            data-collection-form="product_form_data"
+
+                            data-formname="{{ add_selected_product_form_name }}"
+
+                            href="{{ path('manufacture-part:admin.selected-products.add') }}"
+
+                            style="padding-top: 0.4rem;"
+                    >
+                        Отправить выбранные
+                    </a>
+                {% endif %}
+
+
                 {% if has_telegram_bot %}
                     <a
                             class="btn btn-sm btn-primary opacity-75 text-nowrap mb-2 d-none"
@@ -113,9 +141,11 @@
                             href="{{ path('manufacture-part-application:admin.message.telegram') }}"
 
                     >
-                        Отправить выбранные в Telegram <img class="shadow rounded-5" src="/assets/telegram-bot/img/telegram.svg" alt="telegram">
+                        Отправить выбранные в Telegram <img class="shadow rounded-5 ms-1"
+                                                            src="/assets/telegram-bot/img/telegram.svg" alt="telegram">
                     </a>
                 {% endif %}
+
 
             </div>
         {% endif %}
