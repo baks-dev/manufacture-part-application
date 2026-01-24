@@ -262,17 +262,16 @@
 
                                        data-product="{{ item.productId }}"
 
-                                       {% if opens %}
-                                            {% if opens.actionsOfferOffer %}
-                                               data-offer="{{ item.productOfferId }}"
-                                            {% endif %}
-                                            {% if opens.actionsOfferVariation %}
+                                       {% if item.productOfferId %}
+                                           data-offer="{{ item.productOfferId }}"
+                                       {% endif %}
+
+                                            {% if item.productVariationId %}
                                                 data-variation="{{ item.productVariationId }}"
                                             {% endif %}
-                                            {# TODO #}
-                                            {% if opens.actionsOfferModification %}
+
+                                            {% if item.productModificationId %}
                                                 data-modification="{{ item.productModificationId }}"
-                                            {% endif %}
                                         {% endif %}
 
                                        data-collection-form="collection" {# name коллекции из DTO #}

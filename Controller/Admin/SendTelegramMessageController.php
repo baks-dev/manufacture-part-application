@@ -141,15 +141,30 @@ final class SendTelegramMessageController extends AbstractController
         /** Если сообщение заполнено */
         if(false === empty($messageTelegram))
         {
-
             /** Получить и отправить изображение товара */
 
             /** @var ProductsDetailByUidsResult $telegramDetail */
             foreach($telegramDetails as $telegramDetail)
             {
+                $caption = sprintf("Товар с артикулом ```%s```", $telegramDetail->getProductArticle());
+
                 $productImage = $telegramDetail->getProductImage();
                 $productImageExt = $telegramDetail->getProductImageExt();
                 $productImageCdn = $telegramDetail->isProductImageCdn();
+
+                /** Отправляем сообщение без фото */
+                if(empty($productImage))
+                {
+                    $noPhoto = PHP_EOL.PHP_EOL.'К сожалению, фото не найдено. Пожалуйста, обратитесь к администратору ресурса для получения дополнительной информации.';
+
+                    /** Отправляем сообщение без фото */
+                    $telegramSendMessages
+                        ->chanel($channel)
+                        ->message($caption.$noPhoto)
+                        ->send();
+
+                    continue;
+                }
 
                 $imagePath = $ImagePathExtension->imagePath($productImage, $productImageExt, $productImageCdn);
 
@@ -157,9 +172,6 @@ final class SendTelegramMessageController extends AbstractController
                 {
                     $imagePath = $host.$imagePath;
                 }
-
-
-                $caption = sprintf("Товар с артикулом %s", $telegramDetail->getProductArticle());
 
                 $resultPhoto = $telegramSendPhoto
                     ->chanel($channel)
@@ -182,7 +194,7 @@ final class SendTelegramMessageController extends AbstractController
 
             }
 
-            /** Получить и отправить сообщение */
+            /** Получить и отправить сообщение с фото */
             $result = $telegramSendMessages
                 ->chanel($channel)
                 ->message($messageTelegram)
