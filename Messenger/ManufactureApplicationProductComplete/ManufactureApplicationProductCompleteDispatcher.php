@@ -25,27 +25,32 @@ namespace BaksDev\Manufacture\Part\Application\Messenger\ManufactureApplicationP
 
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\Completed\ManufactureApplicationCompletedDTO;
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\Completed\ManufactureApplicationCompletedHandler;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Обработчик сообщения ManufacturePartProductMessage,
- * которое диспатчится при добавлении товара в Производственную партию, если completed true
+ * Закрывает производственную заявку
  */
 #[AsMessageHandler(priority: 10)]
 final readonly class ManufactureApplicationProductCompleteDispatcher
 {
     public function __construct(
+        #[Target('manufacturePartApplicationLogger')] private LoggerInterface $logger,
         private ManufactureApplicationCompletedHandler $applicationCompletedHandler,
     ) {}
 
     public function __invoke(ManufactureApplicationProductCompleteMessage $message): void
     {
-
         $ManufactureApplicationCompletedDTO = new ManufactureApplicationCompletedDTO();
 
         $event_uid = $message->getEvent();
         $ManufactureApplicationCompletedDTO->setId($event_uid);
         $this->applicationCompletedHandler->handle($ManufactureApplicationCompletedDTO);
 
+        $this->logger->info(
+            sprintf('%s: закрыли производственную заявку', $message->getId()),
+            [self::class.':'.__LINE__, var_export($message, true)],
+        );
     }
 }

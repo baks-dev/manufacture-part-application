@@ -30,6 +30,7 @@ use BaksDev\Manufacture\Part\Application\Entity\Event\ManufactureApplicationEven
 use BaksDev\Manufacture\Part\Application\Entity\ManufactureApplication;
 use BaksDev\Manufacture\Part\Application\Entity\Product\ManufactureApplicationProduct;
 use BaksDev\Manufacture\Part\Application\Forms\ManufactureApplicationFilter\Admin\ManufactureApplicationFilterDTO;
+use BaksDev\Manufacture\Part\Application\Type\Status\ManufactureApplicationStatus;
 use BaksDev\Manufacture\Part\Application\Type\Status\ManufactureApplicationStatus\ManufactureApplicationStatusNew;
 use BaksDev\Manufacture\Part\Repository\OpenManufacturePart\OpenManufacturePartResult;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
@@ -38,6 +39,7 @@ use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\CategoryProductModification;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans\CategoryProductModificationTrans;
 use BaksDev\Products\Category\Entity\Offers\Variation\Trans\CategoryProductVariationTrans;
+use BaksDev\Products\Product\Entity\Event\ProductEvent;
 use BaksDev\Products\Product\Entity\Info\ProductInfo;
 use BaksDev\Products\Product\Entity\Offers\Image\ProductOfferImage;
 use BaksDev\Products\Product\Entity\Offers\ProductOffer;
@@ -46,6 +48,7 @@ use BaksDev\Products\Product\Entity\Offers\Variation\Modification\Image\ProductM
 use BaksDev\Products\Product\Entity\Offers\Variation\Modification\ProductModification;
 use BaksDev\Products\Product\Entity\Offers\Variation\ProductVariation;
 use BaksDev\Products\Product\Entity\Photo\ProductPhoto;
+use BaksDev\Products\Product\Entity\Product;
 use BaksDev\Products\Product\Entity\ProductInvariable;
 use BaksDev\Products\Product\Entity\Trans\ProductTrans;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Personal\UserProfilePersonal;
@@ -96,7 +99,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
     {
 
         /* Если есть открытая произв. партия */
-        if ($opens instanceof OpenManufacturePartResult)
+        if($opens instanceof OpenManufacturePartResult)
         {
             $this->opens = $opens;
 
@@ -123,16 +126,22 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
         $dbal
             ->addSelect('manufacture_application_event.priority')
             ->addSelect('manufacture_application_event.status')
-            ->leftJoin(
+            ->join(
                 'manufacture_application',
                 ManufactureApplicationEvent::class,
                 'manufacture_application_event',
-                'manufacture_application_event.id = manufacture_application.event'
+                '
+                    manufacture_application_event.id = manufacture_application.event AND
+                    manufacture_application_event.status = :status
+                ',
             );
 
         /* Статус заявки - по умолчанию показать только новые */
-        $dbal->andWhere('manufacture_application_event.status = :status');
-        $dbal->setParameter('status', $this->filter?->getStatus() ?? ManufactureApplicationStatusNew::STATUS);
+        $dbal->setParameter(
+            'status',
+            $this->filter?->getStatus() ?? ManufactureApplicationStatusNew::class,
+            ManufactureApplicationStatus::TYPE,
+        );
 
 
         $dbal
@@ -143,7 +152,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 'manufacture_application_event',
                 ManufactureApplicationProduct::class,
                 'manufacture_application_product',
-                'manufacture_application_event.id = manufacture_application_product.event'
+                'manufacture_application_event.id = manufacture_application_product.event',
             );
 
         $dbal
@@ -167,19 +176,34 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
 
 
         $dbal
+            ->leftJoin(
+                'manufacture_application_product',
+                ProductEvent::class,
+                'product_event',
+                'product_event.id = manufacture_application_product.product',
+            );
+
+        $dbal
+            ->leftJoin(
+                'manufacture_application_product',
+                Product::class,
+                'product',
+                'product.id = product_event.main',
+            );
+
+        $dbal
             ->addSelect('product_info.article AS product_article')
             ->join(
-                'manufacture_application_product',
+                'product',
                 ProductInfo::class,
                 'product_info',
-                'product_info.event = manufacture_application_product.product AND (product_info.profile IS NULL OR product_info.profile = :profile)',
+                'product_info.event = product.event AND (product_info.profile IS NULL OR product_info.profile = :profile)',
             )
             ->setParameter(
                 key: 'profile',
                 value: $this->UserProfileTokenStorage->getProfile(),
                 type: UserProfileUid::TYPE,
             );
-
 
 
         /* Торговое предложение */
@@ -196,7 +220,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'manufacture_application_product',
                     ProductOffer::class,
                     'product_offer',
-                    'product_offer.id = manufacture_application_product.offer OR product_offer.id IS NULL'
+                    'product_offer.id = manufacture_application_product.offer OR product_offer.id IS NULL',
                 );
 
             /* Получаем тип торгового предложения */
@@ -206,7 +230,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'product_offer',
                     CategoryProductOffers::class,
                     'category_offer',
-                    'category_offer.id = product_offer.category_offer'
+                    'category_offer.id = product_offer.category_offer',
                 );
 
             /* Получаем название торгового предложения */
@@ -217,7 +241,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'category_offer',
                     CategoryProductOffersTrans::class,
                     'category_offer_trans',
-                    'category_offer_trans.offer = category_offer.id AND category_offer_trans.local = :local'
+                    'category_offer_trans.offer = category_offer.id AND category_offer_trans.local = :local',
                 );
 
 
@@ -236,7 +260,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'manufacture_application_product',
                     ProductVariation::class,
                     'product_variation',
-                    'product_variation.id = manufacture_application_product.variation OR product_variation.id IS NULL '
+                    'product_variation.id = manufacture_application_product.variation OR product_variation.id IS NULL ',
                 );
 
             /* Получаем тип множественного варианта */
@@ -246,7 +270,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'product_variation',
                     CategoryProductVariation::class,
                     'category_variation',
-                    'category_variation.id = product_variation.category_variation'
+                    'category_variation.id = product_variation.category_variation',
                 );
 
             /* Получаем название множественного варианта */
@@ -257,7 +281,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'category_variation',
                     CategoryProductVariationTrans::class,
                     'category_variation_trans',
-                    'category_variation_trans.variation = category_variation.id AND category_variation_trans.local = :local'
+                    'category_variation_trans.variation = category_variation.id AND category_variation_trans.local = :local',
                 );
         }
 
@@ -275,7 +299,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'manufacture_application_product',
                     ProductModification::class,
                     'product_modification',
-                    'product_modification.id = manufacture_application_product.modification OR product_modification.id IS NULL '
+                    'product_modification.id = manufacture_application_product.modification OR product_modification.id IS NULL ',
                 );
 
             /* Получаем тип модификации множественного варианта */
@@ -285,7 +309,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'product_modification',
                     CategoryProductModification::class,
                     'category_modification',
-                    'category_modification.id = product_modification.category_modification'
+                    'category_modification.id = product_modification.category_modification',
                 );
 
             /* Получаем название типа модификации */
@@ -296,7 +320,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                     'category_modification',
                     CategoryProductModificationTrans::class,
                     'category_modification_trans',
-                    'category_modification_trans.modification = category_modification.id AND category_modification_trans.local = :local'
+                    'category_modification_trans.modification = category_modification.id AND category_modification_trans.local = :local',
                 );
         }
 
@@ -403,9 +427,9 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
         $dbal->addSelect(
             '
             COALESCE('.
-            $modification_image_ext .
-            $variation_image_ext .
-            $offer_image_ext .
+            $modification_image_ext.
+            $variation_image_ext.
+            $offer_image_ext.
             'product_photo.ext
             ) AS product_image_ext',
         );
@@ -420,9 +444,9 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
         $dbal->addSelect(
             '
             COALESCE('.
-            $modification_image_cdn .
-            $variation_image_cdn .
-            $offer_image_cdn .
+            $modification_image_cdn.
+            $variation_image_cdn.
+            $offer_image_cdn.
             'product_photo.cdn
             ) AS product_image_cdn',
         );
@@ -437,7 +461,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 'manufacture_application_event',
                 UsersTableActionsTrans::class,
                 'action_trans',
-                'action_trans.event = manufacture_application_event.action AND action_trans.local = :local'
+                'action_trans.event = manufacture_application_event.action AND action_trans.local = :local',
             );
 
         /** Ответственное лицо (Профиль пользователя) */
@@ -446,7 +470,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
             'manufacture_application_event',
             UserProfile::class,
             'users_profile',
-            'users_profile.id = manufacture_application_event.fixed'
+            'users_profile.id = manufacture_application_event.fixed',
         );
 
         $dbal
@@ -455,7 +479,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
                 'users_profile',
                 UserProfilePersonal::class,
                 'users_profile_personal',
-                'users_profile_personal.event = users_profile.event'
+                'users_profile_personal.event = users_profile.event',
             );
 
 
@@ -495,7 +519,6 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
             );
 
 
-
         if($this->search?->getQuery())
         {
             $dbal
@@ -506,7 +529,7 @@ final class AllManufacturePartApplicationRepository implements AllManufacturePar
         }
 
         $dbal->orderBy('manufacture_application_event.priority', 'DESC');
-        $dbal->addOrderBy('manufacture_application.id',  'ASC'); // desc
+        $dbal->addOrderBy('manufacture_application.id', 'ASC'); // desc
 
         $dbal->allGroupByExclude();
 

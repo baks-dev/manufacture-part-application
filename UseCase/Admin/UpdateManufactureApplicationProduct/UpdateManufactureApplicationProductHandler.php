@@ -30,14 +30,16 @@ use BaksDev\Manufacture\Part\Application\Messenger\ManufactureApplicationProduct
 
 /**
  * Используется для обновления полей total и completed ManufactureApplicationProduct
+ *
  * @see vendor/baks-dev/manufacture-part-application/Messenger/ManufactureApplicationProductUpdate/ManufactureApplicationProductUpdateHandler.php
  */
 final class UpdateManufactureApplicationProductHandler extends AbstractHandler
 {
-
-    public function handle(UpdateManufactureApplicationDTO $command, bool $is_completed = true): string|ManufactureApplication
+    public function handle(
+        UpdateManufactureApplicationDTO $command,
+        bool $is_completed = true
+    ): string|ManufactureApplication
     {
-
         $this
             ->setCommand($command)
             ->preEventPersistOrUpdate(ManufactureApplication::class, ManufactureApplicationEvent::class);
@@ -51,16 +53,18 @@ final class UpdateManufactureApplicationProductHandler extends AbstractHandler
         $this->flush();
 
         /** @note Важно!!! Не отправляем сообщение в шину */
-        $this->messageDispatch->addClearCacheOther('manufacture-part-application');
+        $this->messageDispatch
+            ->addClearCacheOther('manufacture-part-application')
+            ->addClearCacheOther('wildberries-manufacture')
+            ->addClearCacheOther('wildberries-package');
 
-        if ($is_completed) {
+        if($is_completed)
+        {
             /* Отправляем сообщение для закрытия заявки */
             $this->messageDispatch
-                ->addClearCacheOther('wildberries-manufacture')
-                ->addClearCacheOther('wildberries-package')
                 ->dispatch(
                     message: new ManufactureApplicationProductCompleteMessage($this->main->getId(), $this->main->getEvent()),
-                    transport: 'manufacture-part-application'
+                    transport: 'manufacture-part-application',
                 );
         }
 

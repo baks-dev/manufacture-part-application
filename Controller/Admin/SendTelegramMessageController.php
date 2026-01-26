@@ -146,7 +146,7 @@ final class SendTelegramMessageController extends AbstractController
             /** @var ProductsDetailByUidsResult $telegramDetail */
             foreach($telegramDetails as $telegramDetail)
             {
-                $caption = sprintf("Товар с артикулом ```%s```", $telegramDetail->getProductArticle());
+                $caption = sprintf("Товар с артикулом %s", $telegramDetail->getProductArticle());
 
                 $productImage = $telegramDetail->getProductImage();
                 $productImageExt = $telegramDetail->getProductImageExt();

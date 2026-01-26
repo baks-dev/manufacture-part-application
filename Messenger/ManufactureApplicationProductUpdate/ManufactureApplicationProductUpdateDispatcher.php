@@ -29,73 +29,99 @@ use BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicat
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicationProduct\UpdateManufactureApplicationDTO;
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicationProduct\UpdateManufactureApplicationProductHandler;
 use BaksDev\Manufacture\Part\Messenger\ManufacturePartProduct\ManufacturePartProductMessage;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Обработчик сообщения ManufacturePartProductMessage,
- * которое диспатчится при добавлении товара в Производственную партию
+ * При добавлении в открытую партию продукта производственной заявки
+ * - уменьшает заявку на количество если взяли в работу меньше,
+ * - завершает производственную заявку если количество взятое в работу равно
  */
 #[AsMessageHandler(priority: 10)]
 final readonly class ManufactureApplicationProductUpdateDispatcher
 {
-
     public function __construct(
+        #[Target('manufacturePartApplicationLogger')] private LoggerInterface $logger,
         private ManufactureApplicationProductInterface $manufactureApplicationProduct,
         private UpdateManufactureApplicationProductHandler $UpdateManufactureApplicationProductHandler,
     ) {}
 
     public function __invoke(ManufacturePartProductMessage $message): void
     {
-
         /** Получить данные и отправить в хендлер по обновлению товара */
 
-        if($message->getTotal() !== false)
+        if(empty($message->getTotal()))
         {
-
-            /* Получить данные по товару текущей заявки */
-            /** @var ManufactureApplicationProductResult $ManufactureApplicationProductResult */
-            $ManufactureApplicationProductResult = $this->manufactureApplicationProduct->findApplicationProduct(
-                $message->getEvent(),
-                $message->getOffer(),
-                $message->getVariation(),
-                $message->getModification(),
+            $this->logger->error(
+                'Не возможно выполнить заявку с нулевым количеством',
+                [self::class.':'.__LINE__, var_export($message, true)],
             );
 
-            if(false === ($ManufactureApplicationProductResult instanceof ManufactureApplicationProductResult))
-            {
-                return;
-            }
+            return;
+        }
 
-            /* DTO для обновления заявки */
-            $UpdateManufactureApplicationDTO = new UpdateManufactureApplicationDTO();
+        /* Получить данные по товару текущей заявки */
+        /** @var ManufactureApplicationProductResult $ManufactureApplicationProductResult */
+        $ManufactureApplicationProductResult = $this->manufactureApplicationProduct->findApplicationProduct(
+            $message->getEvent(),
+            $message->getOffer(),
+            $message->getVariation(),
+            $message->getModification(),
+        );
 
-            /* DTO для обновления товара заявки */
-            $UpdateManufactureApplicationProductDTO = new UpdateManufactureApplicationProductDTO();
-            $UpdateManufactureApplicationProductDTO->setId($ManufactureApplicationProductResult->getManufactureApplicationEvent());
+        if(false === ($ManufactureApplicationProductResult instanceof ManufactureApplicationProductResult))
+        {
+            $this->logger->error(
+                'Производственная заявка не найдена',
+                [self::class.':'.__LINE__, var_export($message, true)],
+            );
 
-            $UpdateManufactureApplicationDTO->setId($ManufactureApplicationProductResult->getManufactureApplicationEvent());
+            return;
+        }
 
-            $is_completed = false;
-            if($ManufactureApplicationProductResult->getProductTotal() > $message->getTotal())
-            {
-                /* Уменьшаем кол-во на то, что указал поль-тель при добавлении товара в производственную партию */
-                $updated_total = $ManufactureApplicationProductResult->getProductTotal() - $message->getTotal();
-                $UpdateManufactureApplicationProductDTO->setTotal($updated_total);
-            }
-            else
-            {
-                $UpdateManufactureApplicationProductDTO->setCompleted($message->getTotal());
+        /* DTO для обновления заявки */
+        $UpdateManufactureApplicationDTO = new UpdateManufactureApplicationDTO();
+        $UpdateManufactureApplicationDTO->setId($ManufactureApplicationProductResult->getManufactureApplicationEvent());
 
-                /* Укажем флаг по завершению */
-                $is_completed = true;
+        $UpdateManufactureApplicationProductDTO = new UpdateManufactureApplicationProductDTO();
+        $UpdateManufactureApplicationProductDTO->setId($ManufactureApplicationProductResult->getManufactureApplicationEvent());
 
-            }
 
+        /**
+         * Уменьшаем производственную заявку в случае если количество взятое в работу меньше чем в заявке
+         */
+
+        if($ManufactureApplicationProductResult->getProductTotal() > $message->getTotal())
+        {
+            /* Уменьшаем кол-во на то, что указал поль-тель при добавлении товара в производственную партию */
+            $updated_total = $ManufactureApplicationProductResult->getProductTotal() - $message->getTotal();
+            $UpdateManufactureApplicationProductDTO->setTotal($updated_total);
             $UpdateManufactureApplicationDTO->setProduct($UpdateManufactureApplicationProductDTO);
 
-            $this->UpdateManufactureApplicationProductHandler->handle($UpdateManufactureApplicationDTO, $is_completed);
+            $this->UpdateManufactureApplicationProductHandler->handle($UpdateManufactureApplicationDTO, false);
 
+            $this->logger->info(
+                sprintf('Уменьшили кол-во товара в производственной заявке на %s', $updated_total),
+                [self::class.':'.__LINE__, var_export($message, true)],
+            );
         }
+
+        /**
+         * Закрываем производственную заявку в случае если количество взятое в работу равное заявке
+         *
+         * @see ManufactureApplicationProductCompleteDispatcher
+         */
+
+        $this->logger->info(
+            sprintf('%s: закрываем производственную заявку', $ManufactureApplicationProductResult->getManufactureApplicationId()),
+            [self::class.':'.__LINE__, var_export($message, true)],
+        );
+
+        $UpdateManufactureApplicationProductDTO->setCompleted($message->getTotal());
+        $UpdateManufactureApplicationDTO->setProduct($UpdateManufactureApplicationProductDTO);
+
+        $this->UpdateManufactureApplicationProductHandler->handle($UpdateManufactureApplicationDTO);
 
     }
 }

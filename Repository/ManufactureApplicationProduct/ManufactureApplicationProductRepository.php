@@ -62,7 +62,7 @@ final class ManufactureApplicationProductRepository implements ManufactureApplic
                 'manufacture_application',
                 ManufactureApplicationEvent::class,
                 'manufacture_application_event',
-                'manufacture_application_event.id = manufacture_application.event'
+                'manufacture_application_event.id = manufacture_application.event',
             );
 
         $dbal
@@ -73,7 +73,7 @@ final class ManufactureApplicationProductRepository implements ManufactureApplic
                 'manufacture_application_event',
                 ManufactureApplicationProduct::class,
                 'manufacture_application_product',
-                'manufacture_application_event.id = manufacture_application_product.event'
+                'manufacture_application_event.id = manufacture_application_product.event',
             );
 
 
@@ -81,25 +81,26 @@ final class ManufactureApplicationProductRepository implements ManufactureApplic
             ->setParameter('product', $product, ProductEventUid::TYPE);
 
         /* Выбираем товары только со статусом new */
-        $dbal->andWhere('manufacture_application_event.status = :status')
+        $dbal
+            ->andWhere('manufacture_application_event.status = :status')
             ->setParameter('status', ManufactureApplicationStatusNew::STATUS);
 
 
-        if ($offer !== false)
+        if($offer !== false)
         {
             $dbal
                 ->andWhere('manufacture_application_product.offer = :offer')
                 ->setParameter('offer', $offer, ProductOfferUid::TYPE);
         }
 
-        if ($variation !== false)
+        if($variation !== false)
         {
             $dbal
                 ->andWhere('manufacture_application_product.variation = :variation')
                 ->setParameter('variation', $variation, ProductVariationUid::TYPE);
         }
 
-        if ($modification !== false)
+        if($modification !== false)
         {
             $dbal
                 ->andWhere('manufacture_application_product.modification = :modification')

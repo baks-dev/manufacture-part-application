@@ -32,9 +32,9 @@ interface AllManufacturePartApplicationInterface
 {
     public function search(SearchDTO $search): self;
 
-    public function findPaginator(): PaginatorInterface;
-
     public function setOpens(?OpenManufacturePartResult $opens): self;
 
     public function filter(ManufactureApplicationFilterDTO $filter): self;
+
+    public function findPaginator(): PaginatorInterface;
 }
