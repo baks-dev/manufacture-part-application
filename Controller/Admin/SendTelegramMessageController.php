@@ -50,7 +50,7 @@ final class SendTelegramMessageController extends AbstractController
 
     #[Route('/admin/send/message/telegram', name: 'admin.message.telegram', methods: ['GET', 'POST'])]
     public function index(
-        #[Autowire(env: 'HOST')] string $host,
+        #[Autowire('%kernel.project_dir%')] string $project_dir,
         #[Autowire(env: 'TELEGRAM_CHANNEL')] string $channel,
         Request $request,
         TelegramSendMessages $telegramSendMessages,
@@ -166,35 +166,45 @@ final class SendTelegramMessageController extends AbstractController
                     continue;
                 }
 
-                $imagePath = $ImagePathExtension->imagePath($productImage, $productImageExt, $productImageCdn);
+                $resultPhoto = false;
 
-                if(false === $productImageCdn)
+                /** Отправляем фото CDN */
+                if(true === $productImageCdn)
                 {
-                    $imagePath = $host.$imagePath;
+                    $imagePath = $ImagePathExtension->imagePath($productImage, $productImageExt, $productImageCdn);
+
+                    $resultPhoto = $telegramSendPhoto
+                        ->chanel($channel)
+                        ->photo($imagePath)
+                        ->caption($caption)
+                        ->send();
                 }
 
-                $resultPhoto = $telegramSendPhoto
-                    ->chanel($channel)
-                    ->photo($imagePath)
-                    ->caption($caption)
-                    ->send();
+                /** Отправляем фото локально */
+                if(false === $productImageCdn)
+                {
+                    $imagePath = sprintf('%s/%s/%s', $project_dir, $productImage, 'image.'.$productImageExt);
+
+                    $resultPhoto = $telegramSendPhoto
+                        ->chanel($channel)
+                        ->file($imagePath)
+                        ->caption($caption)
+                        ->send();
+                }
 
                 /* Отобразить Toast если отправка изображения не удалась */
                 if(false === $resultPhoto)
                 {
-                    /* Отправить Toast */
                     $this->addFlash
                     (
                         'danger',
                         'message.photo.danger',
                         'telegram.bot',
                     );
-
                 }
-
             }
 
-            /** Получить и отправить сообщение с фото */
+            /** Получить и отправить сообщение с подписью */
             $result = $telegramSendMessages
                 ->chanel($channel)
                 ->message($messageTelegram)
