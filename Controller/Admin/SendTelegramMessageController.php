@@ -50,6 +50,7 @@ final class SendTelegramMessageController extends AbstractController
 
     #[Route('/admin/send/message/telegram', name: 'admin.message.telegram', methods: ['GET', 'POST'])]
     public function index(
+        #[Autowire(env: 'HOST')] string $HOST,
         #[Autowire('%kernel.project_dir%')] string $project_dir,
         #[Autowire(env: 'TELEGRAM_CHANNEL')] string $channel,
         Request $request,
@@ -183,11 +184,21 @@ final class SendTelegramMessageController extends AbstractController
                 /** Отправляем фото локально */
                 if(false === $productImageCdn)
                 {
-                    $imagePath = sprintf('%s/%s/%s', $project_dir, $productImage, 'image.'.$productImageExt);
+                    $upload = implode(DIRECTORY_SEPARATOR, [
+                        $project_dir,
+                        'public',
+                        $productImage,
+                        'image.'.$productImageExt,
+                    ]);
+
+                    $filePath = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $upload);
+
+                    $imagePath = 'https://'.$HOST.$productImage.DIRECTORY_SEPARATOR.'small.webp';
 
                     $resultPhoto = $telegramSendPhoto
                         ->chanel($channel)
-                        ->file($imagePath)
+                        ->file($filePath)
+                        ->photo($imagePath)
                         ->caption($caption)
                         ->send();
                 }
