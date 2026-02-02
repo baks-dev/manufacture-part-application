@@ -172,7 +172,12 @@ final class SendTelegramMessageController extends AbstractController
                 /** Отправляем фото CDN */
                 if(true === $productImageCdn)
                 {
-                    $imagePath = $ImagePathExtension->imagePath($productImage, $productImageExt, $productImageCdn);
+                    $imagePath = $ImagePathExtension->imagePath(
+                        name: $productImage,
+                        ext: $productImageExt,
+                        cdn: true,
+                        size: 'medium',
+                    );
 
                     $resultPhoto = $telegramSendPhoto
                         ->chanel($channel)
@@ -181,7 +186,7 @@ final class SendTelegramMessageController extends AbstractController
                         ->send();
                 }
 
-                /** Отправляем фото локально */
+                /** Отправляем фото локально, предварительно пережимаем */
                 if(false === $productImageCdn)
                 {
                     $upload = implode(DIRECTORY_SEPARATOR, [
