@@ -29,9 +29,9 @@ return static function(ContainerConfigurator $configurator) {
 
     $services = $configurator->services()
         ->defaults()
-        ->public()
         ->autowire()
-        ->autoconfigure();
+        ->autoconfigure()
+        ->public();
 
     $NAMESPACE = BaksDevManufacturePartApplicationBundle::NAMESPACE;
     $PATH = BaksDevManufacturePartApplicationBundle::PATH;
