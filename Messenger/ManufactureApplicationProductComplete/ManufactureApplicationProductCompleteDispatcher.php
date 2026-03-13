@@ -26,12 +26,14 @@ namespace BaksDev\Manufacture\Part\Application\Messenger\ManufactureApplicationP
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\Completed\ManufactureApplicationCompletedDTO;
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\Completed\ManufactureApplicationCompletedHandler;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Закрывает производственную заявку
  */
+#[Autoconfigure(shared: false)]
 #[AsMessageHandler(priority: 10)]
 final readonly class ManufactureApplicationProductCompleteDispatcher
 {

@@ -30,6 +30,7 @@ use BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicat
 use BaksDev\Manufacture\Part\Application\UseCase\Admin\UpdateManufactureApplicationProduct\UpdateManufactureApplicationProductHandler;
 use BaksDev\Manufacture\Part\Messenger\ManufacturePartProduct\ManufacturePartProductMessage;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -38,6 +39,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * - уменьшает заявку на количество если взяли в работу меньше,
  * - завершает производственную заявку если количество взятое в работу равно
  */
+#[Autoconfigure(shared: false)]
 #[AsMessageHandler(priority: 10)]
 final readonly class ManufactureApplicationProductUpdateDispatcher
 {
