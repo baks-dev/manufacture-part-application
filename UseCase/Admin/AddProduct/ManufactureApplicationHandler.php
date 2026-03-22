@@ -50,10 +50,10 @@ final class ManufactureApplicationHandler extends AbstractHandler
         $this->flush();
 
         /* Отправляем сообщение в шину */
-//        $this->messageDispatch->dispatch(
-//            message: new ManufactureApplicationMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-//            transport: 'manufacture-application',
-//        );
+        //        $this->messageDispatch->dispatch(
+        //            message: new ManufactureApplicationMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
+        //            transport: 'manufacture-application',
+        //        );
 
         $this->messageDispatch
             ->addClearCacheOther('manufacture-part-application');

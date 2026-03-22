@@ -40,6 +40,17 @@ class ManufactureApplicationStatusNew implements ManufactureApplicationStatusInt
 
     private static int $sort = 100;
 
+    /** Сортировка */
+    public static function priority(): int
+    {
+        return self::$sort;
+    }
+
+    public static function getVoter(): string
+    {
+        return RoleManufactureApplicationStatus::ROLE.'_'.mb_strtoupper(self::STATUS);
+    }
+
     /** Возвращает значение (value) */
     public function getValue(): string
     {
@@ -50,17 +61,6 @@ class ManufactureApplicationStatusNew implements ManufactureApplicationStatusInt
     public function getName(): string
     {
         return self::NAME;
-    }
-
-    /** Сортировка */
-    public static function priority(): int
-    {
-        return self::$sort;
-    }
-
-    public static function getVoter(): string
-    {
-        return RoleManufactureApplicationStatus::ROLE.'_'.mb_strtoupper(self::STATUS);
     }
 
     public function equals(RoleInterface $role): bool

@@ -47,6 +47,6 @@ return static function(ContainerConfigurator $configurator) {
 
     $services->load(
         $NAMESPACE.'Type\Status\ManufactureApplicationStatus\\',
-        $PATH.implode(DIRECTORY_SEPARATOR, ['Type', 'Status', 'ManufactureApplicationStatus'])
+        $PATH.implode(DIRECTORY_SEPARATOR, ['Type', 'Status', 'ManufactureApplicationStatus']),
     );
 };

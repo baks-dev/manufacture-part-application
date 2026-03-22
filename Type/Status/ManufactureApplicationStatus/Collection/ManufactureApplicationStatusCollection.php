@@ -63,11 +63,13 @@ final class ManufactureApplicationStatusCollection
         throw new InvalidArgumentException(sprintf('ManufactureApplicationStatus not found by name %s', $name));
     }
 
-    public function getStatuses(): array {
+    public function getStatuses(): array
+    {
 
         $statuses = [];
 
-        foreach($this->status as $status) {
+        foreach($this->status as $status)
+        {
             $statuses[$status::STATUS] = new ManufactureApplicationStatus(new $status());
         }
 

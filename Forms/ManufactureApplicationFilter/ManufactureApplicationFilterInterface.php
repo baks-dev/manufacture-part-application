@@ -22,6 +22,7 @@
  */
 
 namespace BaksDev\Manufacture\Part\Application\Forms\ManufactureApplicationFilter;
+
 use BaksDev\Manufacture\Part\Application\Type\Status\ManufactureApplicationStatus;
 
 interface ManufactureApplicationFilterInterface

@@ -48,7 +48,7 @@ final class ExistManufactureApplicationActionRepository implements ExistManufact
             ->setParameter(
                 key: 'id',
                 value: $id,
-                type: UsersTableActionsUid::TYPE
+                type: UsersTableActionsUid::TYPE,
             );
 
         return $dbal->fetchExist();

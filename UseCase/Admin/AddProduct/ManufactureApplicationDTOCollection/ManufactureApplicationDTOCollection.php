@@ -35,10 +35,9 @@ class ManufactureApplicationDTOCollection
 
     private bool $priority;
 
-    public function setPriority(bool $priority): self
+    public function __construct()
     {
-        $this->priority = $priority;
-        return $this;
+        $this->product_data = new ArrayCollection();
     }
 
     public function getPriority(): bool
@@ -46,9 +45,10 @@ class ManufactureApplicationDTOCollection
         return $this->priority;
     }
 
-    public function __construct()
+    public function setPriority(bool $priority): self
     {
-        $this->product_data = new ArrayCollection();
+        $this->priority = $priority;
+        return $this;
     }
 
     public function getProductData(): ArrayCollection

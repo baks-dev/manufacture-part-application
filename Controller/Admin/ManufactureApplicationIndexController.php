@@ -103,7 +103,7 @@ final class ManufactureApplicationIndexController extends AbstractController
                 'has_telegram_bot' => class_exists(BaksDevTelegramBotBundle::class),
                 // Если telegram-bot установлен - указать имя формы TelegramProductsInfoForm
                 'telegram_products_info_form_name' => $has_telegram_bot ? $this->createForm(type: TelegramProductsInfoForm::class)->getName() : '',
-            ]
+            ],
         );
     }
 }

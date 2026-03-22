@@ -38,13 +38,8 @@ class UpdateManufactureApplicationDTO implements ManufactureApplicationEventInte
 
     private UpdateManufactureApplicationProductDTO $product;
 
-    public function setProduct(UpdateManufactureApplicationProductDTO $product): self
+    public function __construct()
     {
-        $this->product = $product;
-        return $this;
-    }
-
-    public function __construct() {
         $this->product = new UpdateManufactureApplicationProductDTO();
     }
 
@@ -65,6 +60,12 @@ class UpdateManufactureApplicationDTO implements ManufactureApplicationEventInte
     public function getProduct(): UpdateManufactureApplicationProductDTO
     {
         return $this->product;
+    }
+
+    public function setProduct(UpdateManufactureApplicationProductDTO $product): self
+    {
+        $this->product = $product;
+        return $this;
     }
 
 }

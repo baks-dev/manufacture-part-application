@@ -34,19 +34,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class UpdateManufactureApplicationProductDTO implements ManufactureApplicationProductInterface
 {
 
+    public ManufactureApplicationEvent $event;
     /**
      * Идентификатор события
      */
     #[Assert\Uuid]
     private ?ManufactureApplicationEventUid $id;
-
     /**
      * Количество данного товара в заявке
      */
     #[Assert\NotBlank]
     #[Assert\Range(min: 1)]
     private ?int $total = null;
-
     /**
      * Количество данного товара в заявке по завершению
      */
@@ -74,8 +73,6 @@ final class UpdateManufactureApplicationProductDTO implements ManufactureApplica
         $this->completed = $completed;
         return $this;
     }
-
-    public ManufactureApplicationEvent $event;
 
     /**
      * Идентификатор события

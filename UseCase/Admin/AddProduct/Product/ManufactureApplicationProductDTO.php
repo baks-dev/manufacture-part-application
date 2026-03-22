@@ -74,30 +74,15 @@ final class ManufactureApplicationProductDTO implements ManufactureApplicationPr
         return $this->product;
     }
 
-    public function getOffer(): ?ProductOfferUid
-    {
-        return $this->offer;
-    }
-
-    public function getVariation(): ?ProductVariationUid
-    {
-        return $this->variation;
-    }
-
-    public function getModification(): ?ProductModificationUid
-    {
-        return $this->modification;
-    }
-
-    public function getTotal(): ?int
-    {
-        return $this->total;
-    }
-
     public function setProduct(?ProductEventUid $product): self
     {
         $this->product = $product;
         return $this;
+    }
+
+    public function getOffer(): ?ProductOfferUid
+    {
+        return $this->offer;
     }
 
     public function setOffer(?ProductOfferUid $offer): self
@@ -106,10 +91,20 @@ final class ManufactureApplicationProductDTO implements ManufactureApplicationPr
         return $this;
     }
 
+    public function getVariation(): ?ProductVariationUid
+    {
+        return $this->variation;
+    }
+
     public function setVariation(?ProductVariationUid $variation): self
     {
         $this->variation = $variation;
         return $this;
+    }
+
+    public function getModification(): ?ProductModificationUid
+    {
+        return $this->modification;
     }
 
     public function setModification(?ProductModificationUid $modification): self
@@ -118,12 +113,16 @@ final class ManufactureApplicationProductDTO implements ManufactureApplicationPr
         return $this;
     }
 
+    public function getTotal(): ?int
+    {
+        return $this->total;
+    }
+
     public function setTotal(?int $total): self
     {
         $this->total = $total;
         return $this;
     }
-
 
 
 }

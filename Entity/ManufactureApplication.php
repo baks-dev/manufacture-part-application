@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace BaksDev\Manufacture\Part\Application\Entity;
 
+use BaksDev\Manufacture\Part\Application\Entity\Event\ManufactureApplicationEvent;
 use BaksDev\Manufacture\Part\Application\Type\Event\ManufactureApplicationEventUid;
 use BaksDev\Manufacture\Part\Application\Type\Id\ManufactureApplicationUid;
-use BaksDev\Manufacture\Part\Application\Entity\Event\ManufactureApplicationEvent;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -66,6 +66,19 @@ class ManufactureApplication
     }
 
     /**
+     * Идентификатор события
+     */
+    public function getEvent(): ManufactureApplicationEventUid
+    {
+        return $this->event;
+    }
+
+    public function setEvent(ManufactureApplicationEventUid|ManufactureApplicationEvent $event): void
+    {
+        $this->event = $event instanceof ManufactureApplicationEvent ? $event->getId() : $event;
+    }
+
+    /**
      * Идентификатор
      */
     public function getId(): ManufactureApplicationUid
@@ -77,18 +90,5 @@ class ManufactureApplication
     {
         $this->id = $id;
         return $this;
-    }
-
-    /**
-     * Идентификатор события
-     */
-    public function getEvent(): ManufactureApplicationEventUid
-    {
-        return $this->event;
-    }
-
-    public function setEvent(ManufactureApplicationEventUid|ManufactureApplicationEvent $event): void
-    {
-        $this->event = $event instanceof ManufactureApplicationEvent ? $event->getId() : $event;
     }
 }

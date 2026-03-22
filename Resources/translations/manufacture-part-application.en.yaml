@@ -1,6 +1,6 @@
 admin:
   success:
-      new: "new manufacture application was added"
+    new: "new manufacture application was added"
   application:
     page:
       new: "Create manufacture application"

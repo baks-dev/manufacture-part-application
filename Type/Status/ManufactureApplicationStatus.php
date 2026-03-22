@@ -36,7 +36,8 @@ final class ManufactureApplicationStatus
 
     public function __construct(
         self|string|ManufactureApplicationStatusInterface $status,
-    ) {
+    )
+    {
 
         if(is_string($status) && class_exists($status))
         {
@@ -78,22 +79,24 @@ final class ManufactureApplicationStatus
 
     }
 
-    public function __toString(): string
-    {
-        return $this->status->getValue();
-    }
-
     public function getManufactureApplicationStatus(): ManufactureApplicationStatusInterface
     {
         return $this->status;
     }
 
-    public function getManufactureApplicationStatusValue(): string {
-        return $this->status->getValue();
+    public static function getDeclared(): array
+    {
+        return array_filter(
+            get_declared_classes(),
+            static function($className) {
+                return in_array(ManufactureApplicationStatusInterface::class, class_implements($className), true);
+            },
+        );
     }
 
-    public function getManufactureApplicationStatusName(): string {
-        return $this->status->getName();
+    public function getManufactureApplicationStatusValue(): string
+    {
+        return $this->status->getValue();
     }
 
     public static function cases(): array
@@ -113,14 +116,14 @@ final class ManufactureApplicationStatus
         return $case;
     }
 
-    public static function getDeclared(): array
+    public function __toString(): string
     {
-        return array_filter(
-            get_declared_classes(),
-            static function($className) {
-                return in_array(ManufactureApplicationStatusInterface::class, class_implements($className), true);
-            }
-        );
+        return $this->status->getValue();
+    }
+
+    public function getManufactureApplicationStatusName(): string
+    {
+        return $this->status->getName();
     }
 
     public function equals(mixed $status): bool

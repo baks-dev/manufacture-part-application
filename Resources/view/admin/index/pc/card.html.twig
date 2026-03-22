@@ -27,31 +27,31 @@
                 <div class="h5">
 
                     <input
-                        id="check-{{ item.identifier }}"
-                        type="checkbox"
-                        class="form-check-input add-all-to-telegram add-all-to-production btn-outline-danger"
+                            id="check-{{ item.identifier }}"
+                            type="checkbox"
+                            class="form-check-input add-all-to-telegram add-all-to-production btn-outline-danger"
 
-                        {# Данные, отправляемые POST #}
-                        data-formname="{{ telegram_products_info_form_name }}"
-                        data-product="{{ item.productId }}"
+                            {# Данные, отправляемые POST #}
+                            data-formname="{{ telegram_products_info_form_name }}"
+                            data-product="{{ item.productId }}"
 
-                        data-manufacture_application_product_event="{{ item.ManufactureApplicationEvent }}"
+                            data-manufacture_application_product_event="{{ item.ManufactureApplicationEvent }}"
 
-                        {# Данные, необходимые для множестенной отправки в Произв. партию #}
-                        {% if opens and item.status == 'new' %}
-                            {% if opens.actionsOfferOffer %}
-                                data-offer="{{ item.productOfferId }}"
+                            {# Данные, необходимые для множестенной отправки в Произв. партию #}
+                            {% if opens and item.status == 'new' %}
+                                {% if opens.actionsOfferOffer %}
+                                    data-offer="{{ item.productOfferId }}"
+                                {% endif %}
+                                {% if opens.actionsOfferVariation %}
+                                    data-variation="{{ item.productVariationId }}"
+                                {% endif %}
+                                {% if opens.actionsOfferModification %}
+                                    data-modification="{{ item.productModificationId }}"
+                                {% endif %}
                             {% endif %}
-                            {% if opens.actionsOfferVariation %}
-                                data-variation="{{ item.productVariationId }}"
-                            {% endif %}
-                            {% if opens.actionsOfferModification %}
-                                data-modification="{{ item.productModificationId }}"
-                            {% endif %}
-                        {% endif %}
-                        data-total="100"
+                            data-total="100"
 
-                        title="Выбрать данный товар"
+                            title="Выбрать данный товар"
                     >
                 </div>
 
@@ -181,17 +181,17 @@
 
                             {% if opens and item.status == 'new' %}
 
-                            <span
-                                role="tooltip"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="bottom"
-                                data-bs-delay='{"show":600,"hide":100}'
-                                title='Добавить в партию производства'
-                            >
+                                <span
+                                        role="tooltip"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom"
+                                        data-bs-delay='{"show":600,"hide":100}'
+                                        title='Добавить в партию производства'
+                                >
 
                                 {# Для возможности открытия модвльного окна в script.js через POST добавлены data-атрибуты #}
-                                            {# data-formname - для хранения отправляемых данных  #}
-                                            {# data-method - опредеяем метод METHOD для указания в request.open  #}
+                                    {# data-formname - для хранения отправляемых данных  #}
+                                    {# data-method - опредеяем метод METHOD для указания в request.open  #}
                                 <a href="{{ path('manufacture-part:admin.selected-products.add') }}"
 
         {#                           class="btn btn-sm {{ item.exist_manufacture ? 'btn-secondary' : 'btn-primary' }} modal-link disabled" #}
@@ -208,17 +208,17 @@
                                         {#                           data-modification="{{ opens.actionsOfferModification ? item.productModificationId : '' }}" #}
 
 
-                                    {% if opens.actionsOfferOffer %}
-                                        data-offer="{{ item.productOfferId }}"
-                                    {% endif %}
+                                        {% if opens.actionsOfferOffer %}
+                                            data-offer="{{ item.productOfferId }}"
+                                        {% endif %}
 
-                                    {% if opens.actionsOfferVariation %}
-                                        data-variation="{{ item.productVariationId }}"
-                                    {% endif %}
+                                        {% if opens.actionsOfferVariation %}
+                                            data-variation="{{ item.productVariationId }}"
+                                        {% endif %}
 
-                                    {% if opens.actionsOfferModification %}
-                                        data-modification="{{ item.productModificationId }}"
-                                    {% endif %}
+                                        {% if opens.actionsOfferModification %}
+                                            data-modification="{{ item.productModificationId }}"
+                                        {% endif %}
 
                                    data-manufacture_application_product_event="{{ item.ManufactureApplicationEvent }}"
 
@@ -244,12 +244,12 @@
                             {% if has_telegram_bot %}
 
                                 <span
-                                    role="tooltip"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="bottom"
-                                    data-bs-delay='{"show":600,"hide":100}'
-                                    title="Сообщение о товаре в Telegram"
-                                    class="ms-2"
+                                        role="tooltip"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom"
+                                        data-bs-delay='{"show":600,"hide":100}'
+                                        title="Сообщение о товаре в Telegram"
+                                        class="ms-2"
                                 >
                                     <a href="{{ path('manufacture-part-application:admin.message.telegram') }}"
                                        class="btn-sm btn-primary modal-link rounded-1 disabled"
@@ -272,7 +272,7 @@
 
                                             {% if item.productModificationId %}
                                                 data-modification="{{ item.productModificationId }}"
-                                        {% endif %}
+                                            {% endif %}
 
                                        data-collection-form="collection" {# name коллекции из DTO #}
                                        data-post-class="add-one-to-collection" {# признак одного элемента #}
@@ -280,7 +280,8 @@
                                         {# <img class="shadow rounded-5" src="/assets/telegram-bot/img/telegram.svg"
                                              alt="telegram"> #}
 
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                             fill="currentColor"
                                              class="bi bi-telegram text-secondary" viewBox="0 0 16 16">
                                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.287 5.906q-1.168.486-4.666 2.01-.567.225-.595.442c-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294q.39.01.868-.32 3.269-2.206 3.374-2.23c.05-.012.12-.026.166.016s.042.12.037.141c-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8 8 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629q.14.092.27.187c.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.4 1.4 0 0 0-.013-.315.34.34 0 0 0-.114-.217.53.53 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09"/>
                                         </svg>

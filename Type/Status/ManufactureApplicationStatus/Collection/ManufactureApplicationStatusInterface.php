@@ -28,11 +28,11 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('baks.manufacture_application.status')]
 interface ManufactureApplicationStatusInterface
 {
-    public function getValue(): string;
-
     /** Сортировка */
     public static function priority(): int;
 
     /** Правило доступа */
     public static function getVoter(): string;
+
+    public function getValue(): string;
 }

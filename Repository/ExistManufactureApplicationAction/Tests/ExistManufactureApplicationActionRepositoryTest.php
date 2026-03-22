@@ -33,7 +33,8 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class ExistManufactureApplicationActionRepositoryTest extends KernelTestCase
 {
-    public function testIsExistManufactureApplicationAction(): void {
+    public function testIsExistManufactureApplicationAction(): void
+    {
         /** @var ExistManufactureApplicationActionInterface $repository */
         $repository = self::getContainer()->get(ExistManufactureApplicationActionInterface::class);
 

@@ -58,19 +58,12 @@ final class ManufactureApplicationDTO implements ManufactureApplicationEventInte
     private bool $priority;
 
     private ManufactureApplicationProductDTO $product;
-
-    public function setProduct(ManufactureApplicationProductDTO $product): self
-    {
-        $this->product = $product;
-        return $this;
-    }
-
     /** Статус заявки */
     #[Assert\NotBlank]
     private readonly ManufactureApplicationStatus $status;
 
-
-    public function __construct(UserProfileUid $profile,) {
+    public function __construct(UserProfileUid $profile)
+    {
 
         $this->id = null;
         $this->product = new ManufactureApplicationProductDTO();
@@ -89,10 +82,15 @@ final class ManufactureApplicationDTO implements ManufactureApplicationEventInte
         return $this->id;
     }
 
-
     public function getProduct(): ManufactureApplicationProductDTO
     {
         return $this->product;
+    }
+
+    public function setProduct(ManufactureApplicationProductDTO $product): self
+    {
+        $this->product = $product;
+        return $this;
     }
 
     public function getPriority(): bool

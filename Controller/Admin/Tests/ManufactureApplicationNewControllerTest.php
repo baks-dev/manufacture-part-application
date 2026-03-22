@@ -36,10 +36,9 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class ManufactureApplicationNewControllerTest extends WebTestCase
 {
+    private const string ROLE = 'ROLE_MANUFACTURE_PART_APPLICATION_NEW';
     private static ?string $url = null;
     private static ?array $post_data = null;
-
-    private const string ROLE = 'ROLE_MANUFACTURE_PART_APPLICATION_NEW';
 
     public static function setUpBeforeClass(): void
     {
@@ -53,9 +52,9 @@ final class ManufactureApplicationNewControllerTest extends WebTestCase
                         'offer' => ProductOfferUid::TEST,
                         'variation' => ProductVariationUid::TEST,
                         'modification' => ProductModificationUid::TEST,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
     }

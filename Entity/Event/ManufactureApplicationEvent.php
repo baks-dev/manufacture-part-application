@@ -107,11 +107,6 @@ class ManufactureApplicationEvent extends EntityEvent
         return (string) $this->id;
     }
 
-    public function getId(): ManufactureApplicationEventUid
-    {
-        return $this->id;
-    }
-
     public function getMain(): ?ManufactureApplicationUid
     {
         return $this->main;
@@ -122,6 +117,11 @@ class ManufactureApplicationEvent extends EntityEvent
         $this->main = $main instanceof ManufactureApplication ? $main->getId() : $main;
 
         return $this;
+    }
+
+    public function getId(): ManufactureApplicationEventUid
+    {
+        return $this->id;
     }
 
     public function isPriority(): bool

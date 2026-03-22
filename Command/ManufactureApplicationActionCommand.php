@@ -69,8 +69,9 @@ class ManufactureApplicationActionCommand extends Command
 
 
         /** Проверить - существует ли Производственный процесс с заданным id */
-        if ($this->existManufactureApplicationAction->isExistManufactureApplicationAction($action_id)) {
-            $io->success('Производственный процесс "' . $action_name . '" уже существует');
+        if($this->existManufactureApplicationAction->isExistManufactureApplicationAction($action_id))
+        {
+            $io->success('Производственный процесс "'.$action_name.'" уже существует');
             return Command::SUCCESS;
         }
 
@@ -95,7 +96,7 @@ class ManufactureApplicationActionCommand extends Command
         /** Создать производственный процесс */
         $this->UsersTableActionsHandler->handle($UsersTableActionsDTO);
 
-        $io->success('Производственный процесс "' . $action_name . '" создан');
+        $io->success('Производственный процесс "'.$action_name.'" создан');
 
         return Command::SUCCESS;
     }

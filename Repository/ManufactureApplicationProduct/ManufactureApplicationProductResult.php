@@ -42,11 +42,13 @@ final class ManufactureApplicationProductResult
 
     ) {}
 
-    public function getManufactureApplicationId(): ManufactureApplicationUid {
+    public function getManufactureApplicationId(): ManufactureApplicationUid
+    {
         return new ManufactureApplicationUid($this->id);
     }
 
-    public function getManufactureApplicationEvent(): ManufactureApplicationEventUid {
+    public function getManufactureApplicationEvent(): ManufactureApplicationEventUid
+    {
         return new ManufactureApplicationEventUid($this->event);
     }
 
@@ -55,11 +57,13 @@ final class ManufactureApplicationProductResult
         return $this->priority;
     }
 
-    public function getProductTotal(): ?int {
+    public function getProductTotal(): ?int
+    {
         return $this->product_total;
     }
 
-    public function getProductTotalCompleted(): ?int {
+    public function getProductTotalCompleted(): ?int
+    {
         return $this->product_total_completed;
     }
 

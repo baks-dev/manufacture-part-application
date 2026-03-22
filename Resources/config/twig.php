@@ -30,7 +30,7 @@ return static function(TwigConfig $twig) {
 
     $twig->path(
         BaksDevManufacturePartApplicationBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'view', '']),
-        'manufacture-part-application'
+        'manufacture-part-application',
     );
 
 };

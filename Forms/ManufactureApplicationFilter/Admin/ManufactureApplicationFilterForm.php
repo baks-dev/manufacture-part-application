@@ -150,13 +150,13 @@ class ManufactureApplicationFilterForm extends AbstractType
                     $this->session->remove($this->sessionKey);
                 }
 
-            }
+            },
         );
 
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event): void {}
+            function(FormEvent $event): void {},
         );
 
 
@@ -170,7 +170,7 @@ class ManufactureApplicationFilterForm extends AbstractType
                 'validation_groups' => false,
                 'method' => 'POST',
                 'attr' => ['class' => 'w-100'],
-            ]
+            ],
         );
     }
 }

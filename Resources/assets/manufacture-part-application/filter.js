@@ -22,7 +22,7 @@
 
 executeFunc(function manufactureApplicationFilter()
 {
-    if(typeof formDebounce !== 'function')
+    if(typeof formDebounce !== "function")
     {
         return false;
     }
@@ -30,12 +30,12 @@ executeFunc(function manufactureApplicationFilter()
     const form = document.forms.manufacture_application_filter_form;
 
 
-    if(typeof form === 'undefined')
+    if(typeof form === "undefined")
     {
         return false;
     }
 
-    form.addEventListener('click', () =>
+    form.addEventListener("click", () =>
     {
         if(idFormDebounce == lastFormDebounce)
         {
@@ -46,24 +46,30 @@ executeFunc(function manufactureApplicationFilter()
         lastFormDebounce = idFormDebounce;
     });
 
-    const inputFields = form.querySelectorAll('input, select, textarea');
+    const inputFields = form.querySelectorAll("input, select, textarea");
 
     // Добавляем обработчик изменения для каждого поля ввода
     inputFields.forEach(field =>
     {
-        if(field.id === 'manufacture_application_filter_form_status')
+        if(field.id === "manufacture_application_filter_form_status")
         {
-            field.addEventListener('change', () =>
+            field.addEventListener("change", () =>
             {
 
-                setTimeout(() => { form.submit(); }, 300);
+                setTimeout(() =>
+                {
+                    form.submit();
+                }, 300);
 
             });
 
             return;
         }
 
-        field.addEventListener('change', formDebounce(() => { form.submit(); }, 1500));
+        field.addEventListener("change", formDebounce(() =>
+        {
+            form.submit();
+        }, 1500));
 
     });
 
